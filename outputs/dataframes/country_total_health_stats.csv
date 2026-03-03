@@ -1,0 +1,176 @@
+Country,Total documents,Health relevance (1/0),Health adaptation mandate (1/0),Institutional health role (1/0),Adaptation,Mitigation,Disaster Risk Management,Loss And Damage
+Afghanistan,5,1,1,0,4,3,2,0
+Albania,11,6,3,0,1,11,0,0
+Algeria,4,4,3,1,1,3,1,0
+Andorra,16,13,5,0,6,16,0,0
+Angola,1,0,0,0,0,1,0,0
+Antigua and Barbuda,5,1,0,0,2,3,2,0
+Argentina,28,11,2,0,8,22,3,0
+Armenia,2,0,0,0,0,2,0,0
+Australia,23,10,8,0,1,21,0,0
+Austria,24,22,2,0,2,23,0,3
+Azerbaijan,1,0,0,0,0,1,0,0
+Bahamas,4,1,1,0,1,4,0,0
+Bangladesh,6,3,1,0,2,4,2,0
+Barbados,3,0,0,0,0,3,0,0
+Belarus,8,1,1,1,4,7,1,0
+Belgium,14,11,11,0,1,14,0,0
+Belize,1,1,1,0,0,1,1,0
+Benin,1,0,0,0,1,0,0,0
+Bhutan,6,0,0,0,4,3,1,0
+Bolivia,13,10,1,1,11,7,9,2
+Bosnia and Herzegovina,2,1,0,0,1,1,1,0
+Botswana,1,1,1,0,1,1,0,0
+Brazil,52,37,5,0,15,47,4,1
+Bulgaria,17,11,9,3,6,16,1,0
+Burkina Faso,5,1,0,0,2,2,2,0
+Cambodia,3,0,0,0,3,2,3,0
+Canada,14,13,9,1,3,14,0,0
+Central African Republic,2,0,0,0,0,2,0,0
+Chile,16,4,0,0,3,14,2,0
+China,24,12,10,0,3,23,0,0
+Colombia,22,18,4,0,7,19,1,0
+Congo,2,0,0,0,1,2,0,0
+Costa Rica,8,2,0,0,1,8,0,0
+Croatia,13,2,0,0,2,12,0,0
+Cuba,5,2,1,1,5,2,2,0
+Cyprus,1,0,0,0,0,1,0,0
+Czechia,5,2,0,0,1,4,1,0
+Côte d'Ivoire,5,1,1,0,3,5,0,0
+Denmark,25,11,3,0,8,24,0,0
+Djibouti,3,0,0,0,1,2,1,0
+Dominica,2,0,0,0,1,1,1,1
+Dominican Republic,11,2,2,0,5,9,1,0
+Ecuador,7,3,2,1,5,7,1,0
+Egypt,5,0,0,0,0,5,0,0
+El Salvador,8,4,0,0,4,4,2,0
+Estonia,1,1,1,0,1,0,0,0
+Ethiopia,7,5,5,0,0,6,1,0
+European Union,121,85,82,4,31,116,3,1
+Fiji,13,7,5,0,12,4,6,2
+Finland,18,7,1,0,9,16,0,0
+France,29,3,2,0,7,27,0,0
+Gabon,3,3,2,0,3,3,0,0
+Gambia,2,0,0,0,0,2,0,0
+Georgia,18,11,10,0,10,18,0,0
+Germany,62,46,3,0,3,61,0,0
+Ghana,9,4,1,0,3,7,2,1
+Greece,25,6,0,0,4,24,1,0
+Guatemala,3,0,0,0,2,2,0,0
+Guinea,2,1,1,0,1,2,0,0
+Guinea-Bissau,1,0,0,0,0,1,0,0
+Guyana,1,1,1,0,0,1,0,0
+Honduras,7,1,0,0,1,6,0,0
+Hong Kong,3,1,0,0,0,3,0,0
+Hungary,13,7,1,0,6,6,3,2
+Iceland,6,1,0,0,3,5,1,0
+India,19,6,2,0,0,18,3,0
+Indonesia,19,10,4,0,7,14,0,0
+Iran,7,1,1,0,2,5,2,0
+Iraq,1,0,0,0,0,1,0,0
+Ireland,23,10,8,0,9,21,0,0
+Israel,5,0,0,0,1,4,0,0
+Italy,34,10,2,0,1,33,1,0
+Jamaica,1,0,0,0,0,0,1,0
+Japan,38,17,12,0,11,32,6,0
+Jordan,3,0,0,0,0,3,0,0
+Kazakhstan,10,1,1,0,3,6,3,1
+Kenya,12,3,3,0,4,10,5,0
+Kiribati,1,1,1,0,0,1,0,0
+Kosovo,7,3,0,0,1,2,0,0
+Kuwait,2,0,0,0,0,2,0,0
+Kyrgyzstan,5,1,0,0,0,5,0,0
+Laos,3,0,0,0,1,1,2,0
+Latvia,1,1,1,0,1,0,0,0
+Lesotho,1,0,0,0,1,1,0,0
+Liberia,2,0,0,0,1,2,0,0
+Liechtenstein,10,0,0,0,0,10,0,0
+Luxembourg,23,14,8,0,4,22,0,0
+Madagascar,4,0,0,0,3,1,1,0
+Malawi,4,0,0,0,2,3,1,0
+Malaysia,6,0,0,0,0,6,0,0
+Maldives,4,0,0,0,4,2,2,0
+Mali,2,0,0,0,1,1,0,0
+Malta,19,17,2,0,6,19,1,0
+Mauritania,1,0,0,0,0,1,0,0
+Mauritius,6,2,2,1,2,5,2,0
+Mexico,23,8,1,1,7,22,1,1
+"Micronesia, Federated States of",2,0,0,0,2,2,1,0
+Moldova,7,2,0,0,1,7,1,0
+Monaco,2,1,1,0,0,2,0,0
+Mongolia,14,3,2,0,8,9,1,1
+Montenegro,8,2,0,0,1,8,0,0
+Morocco,10,0,0,0,2,9,0,0
+Mozambique,1,0,0,0,1,0,1,0
+Myanmar,6,2,1,0,4,4,1,1
+Namibia,1,0,0,0,1,0,1,0
+Nauru,3,3,3,0,3,3,3,0
+Nepal,5,0,0,0,4,4,1,1
+Netherlands,32,26,9,0,12,24,8,10
+New Zealand,26,17,10,0,12,22,0,0
+Nicaragua,12,7,0,0,5,8,1,0
+Niger,1,0,0,0,1,1,0,0
+Nigeria,3,2,2,0,1,3,0,0
+Niue,1,0,0,0,0,0,1,0
+North Korea,5,0,0,0,0,5,0,0
+North Macedonia,1,0,0,0,0,1,0,0
+Norway,30,11,2,0,11,21,9,3
+Oman,2,1,1,0,1,2,0,0
+Pakistan,6,1,1,0,3,3,1,0
+Palau,3,0,0,0,0,3,0,0
+"Palestine, State of",3,0,0,0,2,1,1,0
+Panama,9,0,0,0,3,8,0,0
+Papua New Guinea,5,2,1,0,4,1,1,0
+Paraguay,8,1,0,0,5,7,0,0
+Peru,12,3,1,1,3,12,0,0
+Philippines,19,6,3,2,6,17,5,0
+Poland,26,6,0,0,1,26,0,0
+Portugal,14,10,6,0,5,12,4,0
+Qatar,1,0,0,0,0,1,0,0
+Romania,15,6,0,0,1,15,0,0
+Russian Federation,4,2,1,0,0,4,0,0
+Rwanda,6,2,2,0,4,3,1,0
+Saint Lucia,1,0,0,0,0,1,0,0
+Saint Vincent and the Grenadines,1,0,0,0,0,1,0,0
+Samoa,4,1,1,1,0,3,1,1
+San Marino,7,2,0,0,0,7,0,0
+Senegal,3,0,0,0,1,2,0,0
+Serbia,11,0,0,0,4,10,1,0
+Seychelles,5,2,2,0,4,2,1,1
+Sierra Leone,2,1,1,0,1,0,0,0
+Singapore,14,4,3,0,0,14,0,0
+Slovakia,10,0,0,0,0,10,0,0
+Slovenia,7,3,1,0,2,6,0,0
+Solomon Islands,2,0,0,0,0,0,2,0
+South Africa,12,3,3,0,5,8,5,0
+South Korea,38,12,8,0,13,29,7,0
+Spain,23,18,7,0,9,18,1,0
+Sri Lanka,5,1,1,0,4,1,1,0
+Suriname,2,2,0,0,0,2,0,0
+Sweden,24,13,3,1,10,18,0,0
+Switzerland,20,3,1,0,8,17,3,0
+Syria,3,0,0,0,1,3,1,0
+Taiwan,10,7,7,0,6,8,1,0
+Tajikistan,4,0,0,0,0,4,0,0
+Tanzania,7,2,2,0,5,3,2,0
+Thailand,6,2,2,1,1,5,0,0
+Timor-Leste,5,1,1,0,5,2,0,0
+Togo,2,0,0,0,1,2,0,0
+Tonga,3,0,0,0,2,3,1,1
+Trinidad and Tobago,1,0,0,0,1,1,0,0
+Tunisia,5,1,0,0,1,2,3,0
+Tuvalu,5,0,0,0,4,2,3,1
+Türkiye,25,9,3,0,6,18,4,1
+Uganda,3,0,0,0,3,3,0,0
+Ukraine,21,1,0,0,3,21,0,0
+United Arab Emirates,2,1,1,0,1,2,0,0
+United Kingdom,63,44,23,3,26,59,4,1
+United States,29,15,14,8,9,26,8,0
+Uruguay,21,13,1,0,5,12,3,0
+Uzbekistan,3,1,0,0,0,2,1,0
+Vanuatu,4,0,0,0,2,3,1,0
+Venezuela,7,2,1,0,3,6,1,0
+Vietnam,20,13,12,4,11,11,3,0
+Yemen,2,0,0,0,1,2,0,0
+Zambia,11,7,7,1,4,8,4,0
+Zimbabwe,7,3,3,1,4,6,1,0
