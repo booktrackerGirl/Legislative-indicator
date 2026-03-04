@@ -290,3 +290,115 @@ substance abuse
 drug use
 alcohol
 alcoholism
+climate change
+changing climate
+climate emergency
+climate action
+climate crisis
+climate decay
+global warming
+green house
+greenhouse
+greenhouse-gas
+greenhouse effect
+greenhouse effects
+climate variability
+global environmental change
+low carbon
+renewable energy
+carbon emission
+carbon emissions
+carbon dioxide
+carbon-dioxide
+co2 emission
+co2 emissions
+climate pollutant
+climate pollutants
+decarbonization
+decarbonisation
+carbon neutral
+carbon-neutral
+carbon neutrality
+climate neutrality
+net-zero
+net zero
+ghge
+ghges
+temperature
+precipitation
+rainfall
+humidity
+monsoon
+el nino
+enso
+sea surface temperature
+sea surface temperatures
+sst
+snowmelt
+storm
+storms
+cyclone
+cyclones
+hurricane
+hurricanes
+typhoon
+typhoons
+sea-level
+sea level
+wild-fire
+forest-fire
+forest fire
+forest fires
+extreme weather
+extreme heat event
+extreme heat events
+heat-wave
+heat index
+heat indices
+cold index
+cold indices
+extreme-cold
+extreme cold
+hydroclim
+disaster risk
+disaster management
+natural disaster
+natural disaster risk
+hydrochloroflourocarbon
+hydrochloroflourocarbons
+hfc
+hfcs
+so4
+n20
+halogen
+chlorocarbon
+chlorocarbons
+pm2.5
+pm25
+nh3
+sox
+o3
+ccl4
+nmvoc
+so2
+co
+nitrous
+methane
+ch4
+sulphur
+voc
+ozone
+emitter
+emitting
+mitigate
+mitigation
+sars cov II
+sars cov 2
+corona
+emotion
+psychology
+diagnosis
+clinical
+patients
+emergency department
+a&e
