@@ -299,6 +299,7 @@ climate decay
 global warming
 green house
 greenhouse
+greenhouse gas
 greenhouse-gas
 greenhouse effect
 greenhouse effects

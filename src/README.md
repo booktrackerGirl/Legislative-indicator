@@ -52,10 +52,10 @@ python ./src/plot_regional_health_category_trend.py \
 
 
 ```
-python aggregate_groups.py \
-  --panel panel.csv \
-  --annotations annotations.csv \
-  --groups country_groups.csv \
-  --output output.xlsx \
-  --group-cols "WHO Region" "HDI Group 2025"
+python ./src/aggregate_groups.py \
+  --panel ./outputs/dataframes/policy_year_panel.csv \
+  --annotations ./annotation/health_annotations_with_iso3.csv \
+  --output ./outputs/dataframes/aggregated_data_file.xlsx \
+  --group-cols Country WHO HDI LC \
+  --start-year 2000
 ```
