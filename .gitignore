@@ -12,6 +12,7 @@ data/pdfs/
 src/offline_health_pipeline.py ## not necessary anymore, and contains some hardcoded paths that may cause confusion
 src/plot_regional_health_categories.py
 src/plot_regional_health_policy.py
+src/checking_data.ipynb
 
 
 # Distribution / packaging
