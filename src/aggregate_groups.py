@@ -71,15 +71,6 @@ def aggregate_health_stocks(panel_csv, annotations_csv, output_excel, grouping_c
     max_year = df["Year"].max()
     years = list(range(min_year, max_year + 1))
 
-    # Rename health feature columns for clarity
-    rename_cols = {
-        "Health relevance (1/0)": "Health-relevant documents",
-        "Health adaptation mandate (1/0)": "Health adaptation mandates",
-        "Institutional health role (1/0)": "Institutional health roles"
-    }
-    grouped = grouped.rename(columns=rename_cols)
-    global_df = global_df.rename(columns=rename_cols)
-
     # Excel writer
     with pd.ExcelWriter(output_excel) as writer:
         # -------------------------------
@@ -108,6 +99,18 @@ def aggregate_health_stocks(panel_csv, annotations_csv, output_excel, grouping_c
             # Convert to DataFrame
             grouped = pd.DataFrame(records)
 
+
+            # Rename health category columns to user-friendly labels
+            grouped = grouped.rename(columns=CATEGORY_LABELS)
+
+            # ✅ Rename health feature columns for readability
+            rename_cols = {
+                "Health relevance (1/0)": "Health-relevant documents",
+                "Health adaptation mandate (1/0)": "Health adaptation mandates",
+                "Institutional health role (1/0)": "Institutional health roles"
+            }
+            grouped = grouped.rename(columns=rename_cols)
+
             # Rename health category columns to user-friendly labels
             grouped = grouped.rename(columns=CATEGORY_LABELS)
 
@@ -130,6 +133,8 @@ def aggregate_health_stocks(panel_csv, annotations_csv, output_excel, grouping_c
 
         global_df = pd.DataFrame(global_records)
         global_df = global_df.rename(columns=CATEGORY_LABELS)
+        # ✅ Rename health feature columns for readability
+        global_df = global_df.rename(columns=rename_cols)
         global_df = global_df.sort_values("Year").reset_index(drop=True)
         global_df.to_excel(writer, sheet_name="Global", index=False)
 
