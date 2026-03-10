@@ -19,11 +19,11 @@ The script attempts document retrieval using smart HTTP requests, then applies m
 
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/80c2e91e-dd30-4739-a40a-4974d8a56e1c" />
 
-Purpose
+### Purpose
 
 This script extracts, translates, and annotates health-related content from policy and legislative documents. It detects health relevance, adaptation mandates, and institutional roles, and maps matched keywords to predefined health categories.
 
-Inputs
+### Inputs
 
 CSV file containing document metadata, including:
 
@@ -81,29 +81,17 @@ Keyword categorization:
 
 Maps matched keywords to predefined health categories (e.g., communicable diseases, mental health, nutrition).
 
-Incremental saving:
 
-Each processed document is saved immediately to prevent data loss.
-
-Memory is cleared after processing each document to handle large datasets.
-
-Output
+### Output
 
 CSV file with one row per document, containing:
-
-Doc ID, Country, ISO3, Year, Response
-
-Health relevance (1/0)
-
-Health adaptation mandate (1/0)
-
-Institutional health role (1/0)
-
-Matched health keywords
-
-Health keyword categories
-
-Notes (e.g., extraction issues, translation warnings)
+- Doc ID, Country, Family ID, ISO3, Year, Response
+- Health relevance (1/0)
+- Health adaptation mandate (1/0)
+- Institutional health role (1/0)
+- Matched health keywords
+- Health keyword categories
+- Notes (e.g., extraction issues, translation warnings)
 
 
 ## Step (Optional)
@@ -202,6 +190,14 @@ Multi-language translation for non-English documents.
 Keyword and obligation-based extraction for targeted health policy analysis.
 
 Incremental processing to resume on failures or partial runs.
+
+
+## Step
+```
+python aggregate_by_family.py -i ./annotation/health_annotations_1.csv -o ./annotation/health_annotations_by_family.csv
+```
+### Purpose
+
 
 
 ## Step 
