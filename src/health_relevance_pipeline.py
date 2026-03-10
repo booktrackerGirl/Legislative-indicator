@@ -632,7 +632,7 @@ def main():
 
     df = pd.read_csv(INPUT_DATA)
     df['Year'] = pd.to_datetime(df['First event in timeline'], errors='coerce').dt.year
-    df = df[~df["Document Content URL"].isna()]
+    #df = df[~df["Document Content URL"].isna()] # So that fallback URL is also considered
 
     total_docs = len(df)
 
