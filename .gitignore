@@ -13,6 +13,8 @@ src/offline_health_pipeline.py ## not necessary anymore, and contains some hardc
 src/plot_regional_health_categories.py
 src/plot_regional_health_policy.py
 src/checking_data.ipynb
+src/create_region_year_stats.py
+src/create_country_health_stats.py
 
 
 # Distribution / packaging

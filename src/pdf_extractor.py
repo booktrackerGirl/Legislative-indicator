@@ -91,7 +91,7 @@ class PDFExtractor:
             # ===============================
             # 1️⃣ Domain-Specific Handlers
             # ===============================
-            if "parliament.gov.zm" in current_url:
+            '''if "parliament.gov.zm" in current_url:
                 result = self._extract_zambia_parliament_pdf(current_url)
                 if self._valid(result):
                     return result
@@ -108,6 +108,11 @@ class PDFExtractor:
 
             if current_url.lower().endswith((".doc", ".docx")):
                 result = self._extract_doc_file(current_url)
+                if self._valid(result):
+                    return result'''
+            
+            if "retsinformation.dk" in current_url:
+                result = self._extract_retsinformation(current_url)
                 if self._valid(result):
                     return result
 
@@ -301,21 +306,54 @@ class PDFExtractor:
             return None
 
     # ============================================================
-    # PLACEHOLDER SPECIAL HANDLERS
-    # (Keep your existing implementations here)
+    # DENMARK – RETSINFORMATION HANDLER
     # ============================================================
 
-    def _extract_zambia_parliament_pdf(self, url):
-        return None
+    def _extract_retsinformation(self, url):
 
-    def _extract_brazil_planalto(self, url):
-        return None
+        try:
+            from playwright.sync_api import sync_playwright
 
-    def _extract_colombia_suin(self, url):
-        return None
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                context = browser.new_context()
+                page = context.new_page()
 
-    def _extract_doc_file(self, url):
-        return None
+                pdf_bytes = None
+
+                # Listen for PDF responses
+                def handle_response(response):
+                    nonlocal pdf_bytes
+                    try:
+                        if "application/pdf" in response.headers.get("content-type", ""):
+                            pdf_bytes = response.body()
+                    except:
+                        pass
+
+                page.on("response", handle_response)
+
+                page.goto(url, timeout=60000)
+
+                # Allow page JS to load
+                page.wait_for_timeout(3000)
+
+                # Try clicking the PDF download button
+                try:
+                    page.click("text=PDF", timeout=5000)
+                except:
+                    pass
+
+                page.wait_for_timeout(5000)
+
+                browser.close()
+
+            if pdf_bytes:
+                return self._smart_pdf_extract(pdf_bytes)
+
+            return None
+
+        except:
+            return None
 
     # ============================================================
     # LIGHTWEIGHT BROWSER (LAST RESORT)

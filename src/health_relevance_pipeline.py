@@ -19,7 +19,7 @@ ADAPTATION_TERMS_FILE = "./keywords/adaptation_terms.txt"
 HEALTH_AUTHORITY_FILE = "./keywords/health_authority_terms.txt"
 
 INPUT_DATA = "./data/CCLW_legislative.csv"
-OUTPUT_FILE = "./annotation/health_annotations.csv"
+OUTPUT_FILE = "./annotation/health_annotations_1.csv"
 LOG_FILE = "./annotation/pipeline_log.txt"
 
 WINDOW_SIZE = 100
@@ -66,7 +66,7 @@ def load_keyword_set(path: str) -> List[str]:
 # ============================================================
 health_term_categories = {
 
-# --- General health & services ---
+# --- General Health & Services ---
 "health": "general_health",
 "well-being": "general_health",
 "wellbeing": "general_health",
@@ -81,8 +81,13 @@ health_term_categories = {
 "gp": "general_health",
 "health emergency": "general_health",
 "emergency": "general_health",
+"diagnosis": "general_health",
+"clinical": "general_health",
+"patients": "general_health",
+"emergency department": "general_health",
+"a&e": "general_health",
 
-# --- Mortality & morbidity ---
+# --- Mortality & Morbidity ---
 "mortality": "mortality_morbidity",
 "morbidity": "mortality_morbidity",
 "daly": "mortality_morbidity",
@@ -92,14 +97,16 @@ health_term_categories = {
 "loss of lives": "mortality_morbidity",
 "human life": "mortality_morbidity",
 
-# --- Injury & physical harm ---
+# --- Injury & Trauma ---
 "injury": "injury_trauma",
 "injuries": "injury_trauma",
 "accident": "injury_trauma",
 "traumatic injury": "injury_trauma",
 "fatigue": "injury_trauma",
+"trauma": "injury_trauma",
+"traumatic": "injury_trauma",
 
-# --- General disease terms ---
+# --- Communicable Diseases ---
 "disease": "communicable_disease",
 "diseases": "communicable_disease",
 "ill": "communicable_disease",
@@ -108,15 +115,11 @@ health_term_categories = {
 "syndrome": "communicable_disease",
 "infection": "communicable_disease",
 "infections": "communicable_disease",
-"pathogen": "pathogens_microbiology",
-"pathogens": "pathogens_microbiology",
 "epidemiology": "communicable_disease",
 "epidemic": "communicable_disease",
 "epidemics": "communicable_disease",
 "pandemic": "communicable_disease",
 "pandemics": "communicable_disease",
-
-# --- Communicable diseases ---
 "malaria": "communicable_disease",
 "diarrhoea": "communicable_disease",
 "diarrhea": "communicable_disease",
@@ -153,7 +156,7 @@ health_term_categories = {
 "feverish": "communicable_disease",
 "sepsis": "communicable_disease",
 
-# --- Non-communicable diseases ---
+# --- Non-Communicable Diseases ---
 "ncd": "non_communicable_disease",
 "ncds": "non_communicable_disease",
 "non-communicable disease": "non_communicable_disease",
@@ -203,7 +206,56 @@ health_term_categories = {
 "allergens": "non_communicable_disease",
 "immune system": "non_communicable_disease",
 
-# --- Vector-borne & zoonotic ---
+# --- Maternal & Child Health ---
+"low birth weight": "maternal_child_health",
+"lbw": "maternal_child_health",
+"maternal health": "maternal_child_health",
+"pregnancy": "maternal_child_health",
+"pregnant": "maternal_child_health",
+"gestation": "maternal_child_health",
+"preterm birth": "maternal_child_health",
+"stillbirth": "maternal_child_health",
+"birth weight": "maternal_child_health",
+"pre-eclampsia": "maternal_child_health",
+"preeclampsia": "maternal_child_health",
+"placenta": "maternal_child_health",
+"oligohydramnios": "maternal_child_health",
+"haemorrhage": "maternal_child_health",
+"hemorrhage": "maternal_child_health",
+
+# --- Environmental & Climate Health ---
+"air pollution": "environmental_health",
+"thermal stress": "environmental_health",
+"heat-related illness": "environmental_health",
+"heat-related illnesses": "environmental_health",
+"heat stress": "environmental_health",
+"heat exhaustion": "environmental_health",
+"heat cramp": "environmental_health",
+"heat stroke": "environmental_health",
+"hyperthermia": "environmental_health",
+"hypothermia": "environmental_health",
+"extreme heat": "environmental_health",
+"heatwave": "environmental_health",
+"high temperature": "environmental_health",
+"flood": "environmental_health",
+"drought": "environmental_health",
+"wildfire": "environmental_health",
+"bushfire": "environmental_health",
+"bushfires": "environmental_health",
+"algal bloom": "environmental_health",
+"climate change": "environmental_health",
+"global warming": "environmental_health",
+"temperature": "environmental_health",
+"storms": "environmental_health",
+"extreme weather": "environmental_health",
+"carbon": "environmental_health",
+"co2": "environmental_health",
+"methane": "environmental_health",
+"pm2.5": "environmental_health",
+"ghg": "environmental_health",
+"greenhouse": "environmental_health",
+
+# --- Vector-borne & Zoonotic Diseases ---
 "vector-borne disease": "vector_borne_zoonotic",
 "vector-borne diseases": "vector_borne_zoonotic",
 "zoonoses": "vector_borne_zoonotic",
@@ -223,26 +275,13 @@ health_term_categories = {
 "lymphatic filariasis": "vector_borne_zoonotic",
 "sleeping sickness": "vector_borne_zoonotic",
 "trypanosomiasis": "vector_borne_zoonotic",
-"american trypanosomiasis": "vector_borne_zoonotic",
 "chagas disease": "vector_borne_zoonotic",
-"ross river fever": "vector_borne_zoonotic",
-"ross river virus": "vector_borne_zoonotic",
-"barmah forest virus": "vector_borne_zoonotic",
 "leishmaniasis": "vector_borne_zoonotic",
 "schistosomiasis": "vector_borne_zoonotic",
 "bilharziasis": "vector_borne_zoonotic",
 "tungiasis": "vector_borne_zoonotic",
 
-# --- Pathogens & toxins ---
-"bacteria": "pathogens_microbiology",
-"virus": "pathogens_microbiology",
-"viral infection": "pathogens_microbiology",
-"parasite": "pathogens_microbiology",
-"protozoa": "pathogens_microbiology",
-"prion": "pathogens_microbiology",
-"toxins": "pathogens_microbiology",
-
-# --- Food & waterborne ---
+# --- Food & Waterborne Illnesses ---
 "salmonella": "food_waterborne",
 "salmonellosis": "food_waterborne",
 "campylobacter": "food_waterborne",
@@ -287,45 +326,7 @@ health_term_categories = {
 "anaemia": "nutrition",
 "anemia": "nutrition",
 
-# --- Maternal & child ---
-"low birth weight": "maternal_child_health",
-"lbw": "maternal_child_health",
-"maternal health": "maternal_child_health",
-"pregnancy": "maternal_child_health",
-"pregnant": "maternal_child_health",
-"gestation": "maternal_child_health",
-"preterm birth": "maternal_child_health",
-"stillbirth": "maternal_child_health",
-"birth weight": "maternal_child_health",
-"pre-eclampsia": "maternal_child_health",
-"preeclampsia": "maternal_child_health",
-"placenta": "maternal_child_health",
-"oligohydramnios": "maternal_child_health",
-"haemorrhage": "maternal_child_health",
-"hemorrhage": "maternal_child_health",
-
-# --- Environmental & climate ---
-"air pollution": "environmental_health",
-"thermal stress": "environmental_health",
-"heat-related illness": "environmental_health",
-"heat-related illnesses": "environmental_health",
-"heat stress": "environmental_health",
-"heat exhaustion": "environmental_health",
-"heat cramp": "environmental_health",
-"heat stroke": "environmental_health",
-"hyperthermia": "environmental_health",
-"hypothermia": "environmental_health",
-"extreme heat": "environmental_health",
-"heatwave": "environmental_health",
-"high temperature": "environmental_health",
-"flood": "environmental_health",
-"drought": "environmental_health",
-"wildfire": "environmental_health",
-"bushfire": "environmental_health",
-"bushfires": "environmental_health",
-"algal bloom": "environmental_health",
-
-# --- Mental health ---
+# --- Mental Health ---
 "mental health": "mental_health",
 "mental": "mental_health",
 "mental illness": "mental_health",
@@ -350,8 +351,6 @@ health_term_categories = {
 "psychosocial": "mental_health",
 "psychiatric": "mental_health",
 "psychiatric hospital": "mental_health",
-"trauma": "mental_health",
-"traumatic": "mental_health",
 "post-traumatic stress": "mental_health",
 "post-traumatic stress disorder": "mental_health",
 "ptsd": "mental_health",
@@ -375,15 +374,17 @@ health_term_categories = {
 "solastalgia": "mental_health",
 "ecological grief": "mental_health",
 "eco-grief": "mental_health",
+"emotion": "mental_health",
+"psychology": "mental_health",
 
-# --- Substance use ---
+# --- Substance Use ---
 "substance use": "substance_use",
 "substance abuse": "substance_use",
 "drug use": "substance_use",
 "alcohol": "substance_use",
 "alcoholism": "substance_use",
-}
 
+}
 
 # ============================================================
 # LEGAL OBLIGATION + NEGATION
@@ -524,38 +525,29 @@ def process_document(row, extractor, health_terms, adaptation_terms, health_auth
     content_url = row.get("Document Content URL", "")
     fallback_url = row.get("Document URL", "")
     iso = row.get("Geography ISOs", "")
+    family_id = row.get("Family ID", "")
 
     extracted_text = ""
     notes = ""
 
-    # 1️⃣ Try content_url first
+    # 1️⃣ Try content_url with fallback_url together
     if isinstance(content_url, str) and content_url.startswith("http"):
         try:
-            result = extractor.extract(content_url)
+            result = extractor.extract(content_url, fallback_url=fallback_url)
             if isinstance(result, dict):
                 extracted_text = result.get("text", "")
-                if result.get("metadata", {}).get("ssl_bypassed"):
+                metadata = result.get("metadata", {})
+                if metadata.get("ssl_bypassed"):
                     notes += " | SSL bypass used"
+                if metadata.get("source") == "browser":
+                    notes += " | Retssystem PDF via browser"
             elif isinstance(result, str):
                 extracted_text = result
         except Exception as e:
-            print(f"   ⚠ Error extracting content_url: {e}")
-            notes = f"content_url error: {e}"
+            print(f"   ⚠ Error extracting content/fallback URL: {e}")
+            notes = f"Extraction error: {e}"
 
-    # 2️⃣ If extraction failed → try fallback_url
-    if not extracted_text and isinstance(fallback_url, str) and fallback_url.startswith("http"):
-        try:
-            print("   → Trying fallback Document URL")
-            result = extractor.extract(fallback_url)
-            if isinstance(result, dict):
-                extracted_text = result.get("text", "")
-            elif isinstance(result, str):
-                extracted_text = result
-        except Exception as e:
-            print(f"   ⚠ Error extracting fallback_url: {e}")
-            notes += f" | fallback_url error: {e}"
-
-    # 3️⃣ Translate & normalize
+    # 2️⃣ Translate & normalize
     text = ""
     if extracted_text and extracted_text.strip():
         try:
@@ -612,6 +604,7 @@ def process_document(row, extractor, health_terms, adaptation_terms, health_auth
 
     return {
         "Doc ID": doc_id,
+        "Family ID": family_id,
         "Country": country,
         "ISO3": iso,
         "Year": year,
@@ -666,7 +659,9 @@ def main():
             # Even if it crashes, still save row with defaults
             row_result = {
                 "Doc ID": row.get("Document ID", ""),
+                "Family ID": row.get("Family ID", ""),
                 "Country": row.get("Geographies", ""),
+                "ISO3": row.get("Geography ISOs", ""),  
                 "Year": row.get("Year", ""),
                 "Response": row.get("Topic/Response", ""),
                 "Health relevance (1/0)": 0,
