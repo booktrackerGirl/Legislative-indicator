@@ -1,89 +1,52 @@
-
-
-## Step
-### Purpose
-This script extracts textual content from policy documents available online, supporting PDF and HTML sources, with multiple fallback strategies to maximize successful extraction.
-
-### Inputs
-Document URL(s): Web links pointing to policy documents (e.g., PDFs, HTML pages, or document files).
-
-### Processing
-The script attempts document retrieval using smart HTTP requests, then applies multiple extraction strategies including direct PDF parsing, OCR for scanned PDFs, HTML text extraction, and browser-based rendering as a final fallback.
-
-### Output
-- Extracted document text and metadata, returned as a structured dictionary containing:
-  - text: Extracted document content
-  - metadata: Information about the extraction method (e.g., embedded PDF, OCR, HTML, browser).
+# Overview
+This section describes the role of each script and the corresponding inputs and outputs for them.
 
 ## Step 
 
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/80c2e91e-dd30-4739-a40a-4974d8a56e1c" />
 
+```
+python ./src/health_relevance_pipeline.py
+```
+
 ### Purpose
 
-This script extracts, translates, and annotates health-related content from policy and legislative documents. It detects health relevance, adaptation mandates, and institutional roles, and maps matched keywords to predefined health categories.
+This script extracts, translates, and annotates health-related content from policy and legislative documents. It supports PDF and HTML sources, with multiple fallback strategies to maximize successful extraction. It detects health relevance, adaptation mandates, and institutional roles, and maps matched keywords to predefined health categories.
 
 ### Inputs
-
 CSV file containing document metadata, including:
-
-Document URLs (PDFs or web pages)
-
-Document ID
-
-Geography/Country
-
-Year
-
-Topic/Response
+- Document URLs (PDFs or web pages)
+- Document ID
+- Family ID
+- Geography/Country
+- Year
+- Topic/Response
 
 Keyword files (.txt) for:
+- Health terms 
+- Adaptation terms
+- Health authority/institutional terms
 
-Health terms
-
-Adaptation terms
-
-Health authority/institutional terms
-
-Processing
-
-Document retrieval:
-
-Attempts extraction from primary URL; falls back to secondary URL if needed.
-
-Supports PDFs, HTML pages, and OCR for scanned documents.
-
-Text normalization:
-
-Cleans text by removing non-ASCII characters and placeholders.
-
-Detects language and translates non-English content into English using chunked translation.
-
-Chunking & segmentation:
-
-Splits text into manageable word chunks.
-
-Segments chunks into sentences using spaCy.
-
-Health keyword detection:
-
-Identifies health-related terms in text windows.
-
-Extracts overlapping word windows around keywords to capture context.
-
-Mandate & institutional role detection:
-
-Flags health adaptation mandates using obligation patterns and keywords.
-
-Flags mentions of health authorities or institutional roles.
-
-Keyword categorization:
-
-Maps matched keywords to predefined health categories (e.g., communicable diseases, mental health, nutrition).
+### Processing
+- Document retrieval:
+  - Attempts extraction from primary URL; falls back to secondary URL if needed.
+  - Supports PDFs, HTML pages, and OCR for scanned documents.
+- Text normalization:
+  - Cleans text by removing non-ASCII characters and placeholders.
+  - Detects language and translates non-English content into English using chunked translation.
+- Chunking & segmentation:
+  - Splits text into manageable word chunks.
+  - Segments chunks into sentences using spaCy.
+- Health keyword detection:
+  - Identifies health-related terms in text windows.
+  - Extracts overlapping word windows around keywords to capture context.
+- Mandate & institutional role detection:
+  - Flags health adaptation mandates using obligation patterns and keywords.
+  - Flags mentions of health authorities or institutional roles.
+- Keyword categorization: Maps matched keywords to predefined health categories (e.g., communicable diseases, mental health, nutrition).
 
 
 ### Output
-
 CSV file with one row per document, containing:
 - Doc ID, Country, Family ID, ISO3, Year, Response
 - Health relevance (1/0)
@@ -93,110 +56,29 @@ CSV file with one row per document, containing:
 - Health keyword categories
 - Notes (e.g., extraction issues, translation warnings)
 
-
-## Step (Optional)
-
-Purpose
-
-This pipeline annotates health-relevant legislative documents by extracting text from local PDFs, detecting health-related content, obligations, adaptation mandates, and institutional roles, and exporting structured annotations.
-
-Inputs
-
-Local PDFs – Files in PDF_FOLDER named {doc_id}.pdf.
-
-Document metadata CSV – INPUT_DATA containing columns:
-
-Document ID
-
-Geographies
-
-Topic/Response
-
-first_event_year (renamed to Publication Year)
-
-Keyword lists:
-
-health_terms.txt → general health keywords
-
-adaptation_terms.txt → adaptation-specific keywords
-
-health_authority_terms.txt → institutional/authority keywords
-
-Processing Steps
-
-PDF Extraction
-
-Uses pdfplumber for text-based PDFs.
-
-Falls back to OCR via PyMuPDF + pytesseract for scanned PDFs.
-
-Text is translated to English using GoogleTranslator if non-English is detected.
-
-Text Analysis
-
-Splits documents into manageable chunks (CHUNK_SIZE words).
-
-Uses spaCy (en_core_web_sm) for sentence segmentation.
-
-Detects:
-
-Health relevance – presence of health keywords.
-
-Health adaptation mandate – sentences with health + adaptation keywords or legal obligations (using regex).
-
-Institutional health role – presence of health authority keywords.
-
-Extracts windows of text around relevant health keywords for context.
-
-Annotation Generation
-
-Combines results into a structured row with columns:
-
-Doc ID, Country, Year, Response,
-Health relevance (1/0),
-Health adaptation mandate (1/0),
-Institutional health role (1/0),
-Extracted health text,
-Notes
-
-Handles incremental processing to skip already annotated documents.
-
-Output
-
-Appends each processed row to OUTPUT_FILE in CSV format.
-
-Logs warnings and progress to LOG_FILE.
-
-Configuration
-
-Adjustable parameters:
-
-WINDOW_SIZE – number of words around health keywords to extract.
-
-MIN_OVERLAP_WORDS – minimum overlap when merging windows.
-
-CHUNK_SIZE – number of words per processing chunk.
-
-REL_THRESHOLD – threshold for detecting relative increases (not used here but common in stock plots).
-
-Supports large pipelines with memory cleanup (gc.collect) and logging.
-
-Strengths
-
-Handles scanned PDFs via OCR.
-
-Multi-language translation for non-English documents.
-
-Keyword and obligation-based extraction for targeted health policy analysis.
-
-Incremental processing to resume on failures or partial runs.
-
-
 ## Step
 ```
 python aggregate_by_family.py -i ./annotation/health_annotations_1.csv -o ./annotation/health_annotations_by_family.csv
 ```
 ### Purpose
+This script aggregates **document-level health annotations** to the **Family ID level**, consolidating multiple document entries belonging to the same policy family into a single record.
+
+### Inputs
+- **Input CSV (`--input` / `-i`)**: A dataset containing document-level annotations, including *Family ID*, health indicators, and matched health keywords.
+
+### Processing
+
+1. Loads the input dataset and verifies that the **Family ID** column exists.
+2. Groups records by **Family ID** to combine multiple document entries within the same family.
+3. Aggregates fields as follows:
+
+   * **Binary indicators** (*Health relevance*, *Health adaptation mandate*, *Institutional health role*): set to **1 if any document in the family has value 1**.
+   * **Matched health keywords** and **health keyword categories**: merged across documents and deduplicated.
+   * **Metadata fields** (Country, ISO3, Year, Response): taken from the **first record** within each family group.
+4. Produces a single consolidated row per **Family ID**.
+
+### Output
+A **CSV file (`--output` / `-o`)** containing aggregated health annotations at the **Family ID level**, with combined keywords, categories, and family-level indicator values.
 
 
 
@@ -226,6 +108,44 @@ Optionally saves the merged dataset as a new CSV file if an output path is provi
 ## Step 
 
 ```
+python ./src/create_worldmap_2000.py \ --input_csv ./annotation/health_annotations_with_iso3.csv \
+ --panel ./outputs/dataframes/policy_year_panel.csv \
+ --shapefile ./shapefiles/WB_GAD_ADM0_complete.shp \
+ --output_png ./outputs/figures/health_world_map.png \
+ --output_pdf ./outputs/figures/health_world_map.pdf
+```
+
+### Purpose
+This script generates a **global choropleth map** showing the cumulative number of **health-relevant legislative documents** by country for the period **2000–2025**.
+
+### Inputs
+* `health_annotations.csv`: Document annotation dataset containing **Family ID, ISO3 country codes, and health relevance labels**.
+* `policy_year_panel.csv`: Panel dataset containing **Family ID–Year mappings**.
+* `WB_GAD_ADM0_complete.shp`: Global country shapefile containing **ISO_A3 country codes** for geographic boundaries.
+
+### Processing
+The script merges the annotation and panel datasets to obtain document years, filters documents between **2000–2025**, and keeps only those marked as **health relevant**. Duplicate document–country combinations are removed. Taiwan (`TWN`) is mapped to China (`CHN`), and EU aggregate rows (`EUR`) are excluded. Documents are then **aggregated by ISO3 country code** and merged with the world shapefile using **ISO3 ↔ ISO_A3 matching**.
+
+### Outputs
+* `health_world_map.png` & `health_world_map.pdf`: A **global choropleth map** visualizing the distribution of these documents across countries.
+
+**OR**
+
+```
+python ./src/create_world_map.py \
+ --annotation ./annotation/health_annotations_with_iso3.csv \
+ --panel ./outputs/dataframes/policy_year_panel.csv \
+ --shapefile ./shapefiles/WB_GAD_ADM0_complete.shp \
+ --output_png ./outputs/figures/worldmap_prepost2015.png \
+ --output_pdf ./outputs/figures/worldmap_prepost2015.pdf 
+```
+### Purpose
+Same as earlier, but the values segregated into two time-periods: before and after Paris Agreement (2015).
+
+
+## Step 
+
+```
 python ./src/create_yearly_panel.py \
  --input ./data/CCLW_legislative.csv \
  --output ./outputs/dataframes/policy_year_panel.csv
@@ -243,13 +163,11 @@ The script extracts years from timeline events, determines policy start and end 
 ### Output
 -  `policy_year_panel.csv`: A CSV file containing Document ID and Year, indicating the years each policy is active.
 
-
-
 ## Step 
 
 ``` 
 python ./src/plot_global_health_categories.py \
- --annotation ./annotation/health_annotations.csv \
+ --annotation ./annotation/health_annotations_with_iso3.csv \
  --legis ./data/CCLW_legislative.csv \
  --output ./outputs/figures/global_health_categories.pdf
 ```
@@ -257,7 +175,7 @@ python ./src/plot_global_health_categories.py \
 This script generates a **stacked area plot of active health-relevant climate policy documents over time**, showing how different **health categories contribute to the total policy stock**.
 
 ### Inputs
-- `health_annotations.csv`: Dataset containing **Document ID, health relevance indicator, and health keyword categories**.
+- `health_annotations.csv`: Dataset containing **Family ID, health relevance indicator, and health keyword categories**.
 - `CCLW_legislative.csv`: Legislative dataset containing **policy timeline events and dates**.
 
 ### Processing
@@ -272,7 +190,7 @@ The script filters for **health-relevant policies**, determines policy **start a
 
 ```
 python ./src/plot_global_response_stackplot.py \
- --annotation ./annotation/health_annotations.csv \
+ --annotation ./annotation/health_annotations_with_iso3.csv \
  --legis ./data/CCLW_legislative.csv \
  --output ./outputs/figures/global_policy_stackplot.pdf
 ```
@@ -288,7 +206,6 @@ The script filters **health-relevant policies**, determines **policy start and e
 
 ### Output
 - `global_stackplot.pdf` (or PNG): A **stacked area chart** showing the yearly evolution of active health-relevant legislative documents by **policy response type**, including a line for **total active documents**.
-
 
 
 ## Step 
@@ -388,3 +305,30 @@ The script merges the datasets, filters for health-relevant policies, creates in
 ```aggregated_data_file.xlsx```: An Excel file with multiple sheets containing yearly aggregated counts for:
 - Countries and specified regional groupings (LC, WHO, HDI)
 - A Global sheet aggregating all countries by year.
+
+
+## Step 
+```
+python3 script.py \
+  --annotations ./annotation/health_annotations_with_iso3.csv \
+  --panel ./outputs/dataframes/policy_year_panel.csv \
+  --group_col LC \
+  --output global_regional_trends_LC.pdf
+```
+### Purpose
+This script computes and visualizes the cumulative (“active stock”) number of **health-relevant legislative documents** over time, grouped by region or development category. It produces a time-series plot showing how the stock of documents grows from 2000 onward.
+
+### Inputs
+- **Annotation CSV (`--annotation`)**: Contains document metadata and a *Health relevance (1/0)* indicator.
+- **Policy-year panel CSV (`--panel`)**: Contains document identifiers (Family ID) and associated year information.
+- **Grouping column (`--group_col`)**: Category used to group documents (`LC`, `WHO`, or `HDI`).
+
+### Processing
+1. Filters documents to include only those marked as health-relevant.
+2. Merges annotation and panel datasets using **Family ID**.
+3. Groups documents by the selected category (`LC`, `WHO`, or `HDI`).
+4. For each year (2000–latest available), calculates the **cumulative number of unique documents** that have appeared up to that year.
+5. Generates a line plot showing the active stock of documents over time for each group, with annotations for notable increases and a marker for the **2015 Paris Agreement**.
+
+### Output
+A **PDF figure (`--output`)** showing the time-series trends of active health-relevant legislative documents by the chosen grouping.
