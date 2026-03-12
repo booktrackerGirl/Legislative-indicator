@@ -267,18 +267,22 @@ python ./src/plot_active_stocks.py \
  --group_col WHO
 ```
 ### Purpose
-This script computes and visualizes active stock trends of health-relevant legislative documents by region, showing the accumulation of active policies over time.
+This script computes and visualizes the cumulative (“active stock”) number of **health-relevant legislative documents** over time, grouped by region or development category. It produces a time-series plot showing how the stock of documents grows from 2000 onward.
 
 ### Inputs
-- `health_annotations.csv`: Contains Document ID and health relevance indicator.
-- `policy_year_panel.csv`: Expanded panel dataset with Document ID and Year, indicating when each policy is active.
+- **Annotation CSV (`--annotation`)**: Contains document metadata and a *Health relevance (1/0)* indicator.
+- **Policy-year panel CSV (`--panel`)**: Contains document identifiers (Family ID) and associated year information.
+- **Grouping column (`--group_col`)**: Category used to group documents (`LC`, `WHO`, or `HDI`).
 
 ### Processing
-The script filters for health-relevant policies, aggregates active documents per region by year using a timeline-based stock logic, and highlights relative yearly increases.
+1. Filters documents to include only those marked as health-relevant.
+2. Merges annotation and panel datasets using **Family ID**.
+3. Groups documents by the selected category (`LC`, `WHO`, or `HDI`).
+4. For each year (2000–latest available), calculates the **cumulative number of unique documents** that have appeared up to that year.
+5. Generates a line plot showing the active stock of documents over time for each group, with annotations for notable increases and a marker for the **2015 Paris Agreement**.
 
 ### Output
-`regional_stock_trends.pdf`: A line plot per region, showing the active stock of health-relevant policies over time, with markers indicating notable relative growth and a vertical line marking the Paris Agreement (2015).
-
+A **PDF figure (`--output`)** showing the time-series trends of active health-relevant legislative documents by the chosen grouping.
 
 ## Step 
 
@@ -307,28 +311,3 @@ The script merges the datasets, filters for health-relevant policies, creates in
 - A Global sheet aggregating all countries by year.
 
 
-## Step 
-```
-python3 script.py \
-  --annotations ./annotation/health_annotations_with_iso3.csv \
-  --panel ./outputs/dataframes/policy_year_panel.csv \
-  --group_col LC \
-  --output global_regional_trends_LC.pdf
-```
-### Purpose
-This script computes and visualizes the cumulative (“active stock”) number of **health-relevant legislative documents** over time, grouped by region or development category. It produces a time-series plot showing how the stock of documents grows from 2000 onward.
-
-### Inputs
-- **Annotation CSV (`--annotation`)**: Contains document metadata and a *Health relevance (1/0)* indicator.
-- **Policy-year panel CSV (`--panel`)**: Contains document identifiers (Family ID) and associated year information.
-- **Grouping column (`--group_col`)**: Category used to group documents (`LC`, `WHO`, or `HDI`).
-
-### Processing
-1. Filters documents to include only those marked as health-relevant.
-2. Merges annotation and panel datasets using **Family ID**.
-3. Groups documents by the selected category (`LC`, `WHO`, or `HDI`).
-4. For each year (2000–latest available), calculates the **cumulative number of unique documents** that have appeared up to that year.
-5. Generates a line plot showing the active stock of documents over time for each group, with annotations for notable increases and a marker for the **2015 Paris Agreement**.
-
-### Output
-A **PDF figure (`--output`)** showing the time-series trends of active health-relevant legislative documents by the chosen grouping.
