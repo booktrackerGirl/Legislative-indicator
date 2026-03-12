@@ -25,11 +25,11 @@ def compute_active_stock(annotations, panel):
     Counts each document only once using panel data.
     """
     # Standardize column
-    if "Doc ID" in annotations.columns:
-        annotations = annotations.rename(columns={"Doc ID": "Document ID"})
+    '''if "Doc ID" in annotations.columns:
+        annotations = annotations.rename(columns={"Doc ID": "Document ID"})'''
     
     # Merge panel
-    df = annotations.merge(panel, on="Document ID", how="left", suffixes=("", "_panel"))
+    df = annotations.merge(panel, on="Family ID", how="left", suffixes=("", "_panel"))
     
     # Use Year from panel if available
     if "Year_panel" in df.columns:
@@ -42,7 +42,7 @@ def compute_active_stock(annotations, panel):
 
     # Filter health-relevant and drop duplicates
     df = df[df["Health relevance (1/0)"] >= 1]
-    df = df.drop_duplicates(subset=["Document ID", "ISO3"])
+    df = df.drop_duplicates(subset=["Family ID", "ISO3"])
     df = harmonize_country_names(df)
 
     # Determine year range for cumulative counting
@@ -58,7 +58,7 @@ def compute_active_stock(annotations, panel):
         country_docs = df[df["ISO3"] == c]
         for y in years:
             # Include documents that started <= year
-            new_docs = set(country_docs[country_docs["Year"] <= y]["Document ID"])
+            new_docs = set(country_docs[country_docs["Year"] <= y]["Family ID"])
             active_docs.update(new_docs)
             cum_dict[c].append(len(active_docs))
 

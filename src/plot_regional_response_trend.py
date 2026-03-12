@@ -17,8 +17,8 @@ LINESTYLES = ["-", "--", "-.", ":"]
 # --------------------------------------------------
 def compute_active_stock(annotation_df, panel_df, group_col="LC"):
 
-    if "Doc ID" in annotation_df.columns:
-        annotation_df = annotation_df.rename(columns={"Doc ID": "Document ID"})
+    '''if "Doc ID" in annotation_df.columns:
+        annotation_df = annotation_df.rename(columns={"Doc ID": "Document ID"})'''
 
     # Keep health-relevant
     annotation_df = annotation_df[annotation_df["Health relevance (1/0)"] >= 1].copy()
@@ -29,7 +29,7 @@ def compute_active_stock(annotation_df, panel_df, group_col="LC"):
     annotation_df = annotation_df.explode("Response")
     annotation_df["Response"] = annotation_df["Response"].str.strip()
 
-    df = panel_df.merge(annotation_df, on="Document ID", how="inner")
+    df = panel_df.merge(annotation_df, on="Family ID", how="inner")
 
     if "Year_x" in df.columns:
         df = df.rename(columns={"Year_x": "Year"})
@@ -52,7 +52,7 @@ def compute_active_stock(annotation_df, panel_df, group_col="LC"):
             active_set = set()
             yearly_stock = []
             for year in years_range:
-                new_docs = set(subset.loc[subset["Year"] == year, "Document ID"])
+                new_docs = set(subset.loc[subset["Year"] == year, "Family ID"])
                 active_set |= new_docs
                 yearly_stock.append(len(active_set))
             results[resp][region] = yearly_stock

@@ -11,20 +11,22 @@ REL_THRESHOLD = 0.10
 MARKERS = ["o", "s", "^", "D", "v", "P", "*", "X", "<", ">"]
 LINESTYLES = ["-", "--", "-.", ":"]
 
+# --- Human-readable labels ---
 CATEGORY_LABELS = {
-    "general_health": "General health",
-    "communicable_disease": "Communicable disease",
-    "non_communicable_disease": "Non-communicable disease",
-    "vector_borne_zoonotic": "Vector-borne & zoonotic",
-    "food_waterborne": "Food & waterborne",
-    "environmental_health": "Environmental health",
+    "general_health": "General Health & Services",
+    "mortality_morbidity": "Mortality & Morbidity",
+    "injury_trauma": "Injury & Trauma",
+    "communicable_disease": "Communicable Diseases",
+    "non_communicable_disease": "Non-Communicable Diseases",
+    "maternal_child_health": "Maternal & Child Health",
     "nutrition": "Nutrition",
-    "maternal_child_health": "Maternal & child health",
-    "mental_health": "Mental health",
-    "injury_trauma": "Injury & trauma",
-    "mortality_morbidity": "Mortality & morbidity",
-    "pathogens_microbiology": "Pathogens & microbiology",
-    "substance_use": "Substance use"
+    "mental_health": "Mental Health",
+    "substance_use": "Substance Use",
+    "environmental_health": "Environmental Health",
+    "climate_environment": "Climate & Environment",
+    "vector_borne_zoonotic": "Vector-borne & Zoonotic Diseases",
+    "food_waterborne": "Food & Waterborne Illnesses",
+    "pathogens_microbiology": "Pathogens & Microbiology"
 }
 
 
@@ -45,8 +47,8 @@ def generate_distinct_colors(n):
 # --------------------------------------------------
 def compute_active_stock(annotation_df, panel_df, group_col="LC"):
 
-    if "Doc ID" in annotation_df.columns:
-        annotation_df = annotation_df.rename(columns={"Doc ID": "Document ID"})
+    '''if "Doc ID" in annotation_df.columns:
+        annotation_df = annotation_df.rename(columns={"Doc ID": "Document ID"})'''
 
     annotation_df = annotation_df[
         annotation_df["Health relevance (1/0)"] >= 1
@@ -73,7 +75,7 @@ def compute_active_stock(annotation_df, panel_df, group_col="LC"):
 
     df = panel_df.merge(
         annotation_df,
-        on="Document ID",
+        on="Family ID",
         how="inner"
     )
 
@@ -115,7 +117,7 @@ def compute_active_stock(annotation_df, panel_df, group_col="LC"):
                 new_docs = set(
                     subset.loc[
                         subset["Year"] == year,
-                        "Document ID"
+                        "Family ID"
                     ]
                 )
 

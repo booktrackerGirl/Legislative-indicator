@@ -23,8 +23,8 @@ def main(main_csv, lookup_csv, output_csv=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Merge main CSV with ISO3 lookup CSV")
-    parser.add_argument("main_csv", help="Path to main CSV file (e.g., health_annotations.csv)")
-    parser.add_argument("lookup_csv", help="Path to ISO3 lookup CSV file (e.g., iso3_lookup.csv)")
+    parser.add_argument("--main_csv", help="Path to main CSV file (e.g., health_annotations.csv)")
+    parser.add_argument("--lookup_csv", help="Path to ISO3 lookup CSV file (e.g., iso3_lookup.csv)")
     parser.add_argument("--output", "-o", help="Optional output CSV file path")
 
     args = parser.parse_args()

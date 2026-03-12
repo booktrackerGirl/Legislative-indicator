@@ -19,7 +19,7 @@ ADAPTATION_TERMS_FILE = "./keywords/adaptation_terms.txt"
 HEALTH_AUTHORITY_FILE = "./keywords/health_authority_terms.txt"
 
 INPUT_DATA = "./data/CCLW_legislative.csv"
-OUTPUT_FILE = "./annotation/health_annotations_1.csv"
+OUTPUT_FILE = "./annotation/health_annotations.csv"
 LOG_FILE = "./annotation/pipeline_log.txt"
 
 WINDOW_SIZE = 100
@@ -28,7 +28,9 @@ CHUNK_SIZE = 5000
 
 OUTPUT_COLUMNS = [
     "Doc ID",
+    "Family ID",
     "Country",
+    "ISO3",
     "Year",
     "Response",
     "Health relevance (1/0)",
@@ -39,31 +41,6 @@ OUTPUT_COLUMNS = [
     "Notes"
 ]
 
-# ============================================================
-# LOGGING
-# ============================================================
-logging.basicConfig(
-    filename=LOG_FILE,
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
-# ============================================================
-# NLP
-# ============================================================
-nlp = spacy.load("en_core_web_sm", disable=["ner", "parser"])
-nlp.add_pipe("sentencizer")
-
-# ============================================================
-# LOAD KEYWORDS
-# ============================================================
-def load_keyword_set(path: str) -> List[str]:
-    with open(path, "r", encoding="utf-8") as f:
-        return [line.strip() for line in f if line.strip()]
-
-# ============================================================
-# HEALTH TERM → CATEGORY MAPPING
-# ============================================================
 health_term_categories = {
 
 # --- General Health & Services ---
@@ -223,90 +200,6 @@ health_term_categories = {
 "haemorrhage": "maternal_child_health",
 "hemorrhage": "maternal_child_health",
 
-# --- Environmental & Climate Health ---
-"air pollution": "environmental_health",
-"thermal stress": "environmental_health",
-"heat-related illness": "environmental_health",
-"heat-related illnesses": "environmental_health",
-"heat stress": "environmental_health",
-"heat exhaustion": "environmental_health",
-"heat cramp": "environmental_health",
-"heat stroke": "environmental_health",
-"hyperthermia": "environmental_health",
-"hypothermia": "environmental_health",
-"extreme heat": "environmental_health",
-"heatwave": "environmental_health",
-"high temperature": "environmental_health",
-"flood": "environmental_health",
-"drought": "environmental_health",
-"wildfire": "environmental_health",
-"bushfire": "environmental_health",
-"bushfires": "environmental_health",
-"algal bloom": "environmental_health",
-"climate change": "environmental_health",
-"global warming": "environmental_health",
-"temperature": "environmental_health",
-"storms": "environmental_health",
-"extreme weather": "environmental_health",
-"carbon": "environmental_health",
-"co2": "environmental_health",
-"methane": "environmental_health",
-"pm2.5": "environmental_health",
-"ghg": "environmental_health",
-"greenhouse": "environmental_health",
-
-# --- Vector-borne & Zoonotic Diseases ---
-"vector-borne disease": "vector_borne_zoonotic",
-"vector-borne diseases": "vector_borne_zoonotic",
-"zoonoses": "vector_borne_zoonotic",
-"zoonotic disease": "vector_borne_zoonotic",
-"dengue": "vector_borne_zoonotic",
-"chikungunya": "vector_borne_zoonotic",
-"zika": "vector_borne_zoonotic",
-"yellow fever": "vector_borne_zoonotic",
-"west nile fever": "vector_borne_zoonotic",
-"japanese encephalitis": "vector_borne_zoonotic",
-"tick-borne encephalitis": "vector_borne_zoonotic",
-"lyme disease": "vector_borne_zoonotic",
-"borreliosis": "vector_borne_zoonotic",
-"plague": "vector_borne_zoonotic",
-"onchocerciasis": "vector_borne_zoonotic",
-"river blindness": "vector_borne_zoonotic",
-"lymphatic filariasis": "vector_borne_zoonotic",
-"sleeping sickness": "vector_borne_zoonotic",
-"trypanosomiasis": "vector_borne_zoonotic",
-"chagas disease": "vector_borne_zoonotic",
-"leishmaniasis": "vector_borne_zoonotic",
-"schistosomiasis": "vector_borne_zoonotic",
-"bilharziasis": "vector_borne_zoonotic",
-"tungiasis": "vector_borne_zoonotic",
-
-# --- Food & Waterborne Illnesses ---
-"salmonella": "food_waterborne",
-"salmonellosis": "food_waterborne",
-"campylobacter": "food_waterborne",
-"campylobacteriosis": "food_waterborne",
-"shigella": "food_waterborne",
-"shigellosis": "food_waterborne",
-"giardia": "food_waterborne",
-"giardiasis": "food_waterborne",
-"cryptosporidium": "food_waterborne",
-"cryptosporidiosis": "food_waterborne",
-"legionella": "food_waterborne",
-"legionellosis": "food_waterborne",
-"vibrio bacteria": "food_waterborne",
-"food-borne disease": "food_waterborne",
-"food-borne diseases": "food_waterborne",
-"food-borne pathogens": "food_waterborne",
-"waterborne disease": "food_waterborne",
-"waterborne diseases": "food_waterborne",
-"aflatoxin": "food_waterborne",
-"mycotoxins": "food_waterborne",
-"arsenic": "food_waterborne",
-"botulism": "food_waterborne",
-"ciguatera": "food_waterborne",
-"poisoning": "food_waterborne",
-
 # --- Nutrition ---
 "nutrition": "nutrition",
 "malnutrition": "nutrition",
@@ -384,10 +277,225 @@ health_term_categories = {
 "alcohol": "substance_use",
 "alcoholism": "substance_use",
 
+# --- Environmental Health ---
+"air pollution": "environmental_health",
+"thermal stress": "environmental_health",
+"heat-related illness": "environmental_health",
+"heat-related illnesses": "environmental_health",
+"heat stress": "environmental_health",
+"heat exhaustion": "environmental_health",
+"heat cramp": "environmental_health",
+"heat stroke": "environmental_health",
+"hyperthermia": "environmental_health",
+"hypothermia": "environmental_health",
+"extreme heat": "environmental_health",
+"heatwave": "environmental_health",
+"high temperature": "environmental_health",
+"flood": "environmental_health",
+"drought": "environmental_health",
+"wildfire": "environmental_health",
+"bushfire": "environmental_health",
+"bushfires": "environmental_health",
+"algal bloom": "environmental_health",
+"temperature": "environmental_health",
+"storms": "environmental_health",
+"extreme weather": "environmental_health",
+"carbon": "environmental_health",
+"co2": "environmental_health",
+"methane": "environmental_health",
+"pm2.5": "environmental_health",
+"ghg": "environmental_health",
+"greenhouse": "environmental_health",
+
+# --- Climate & Environment ---
+"climate change": "climate_environment",
+"changing climate": "climate_environment",
+"climate emergency": "climate_environment",
+"climate action": "climate_environment",
+"climate crisis": "climate_environment",
+"climate decay": "climate_environment",
+"global warming": "climate_environment",
+"green house": "climate_environment",
+"greenhouse gas": "climate_environment",
+"greenhouse-gas": "climate_environment",
+"greenhouse effect": "climate_environment",
+"greenhouse effects": "climate_environment",
+"climate variability": "climate_environment",
+"global environmental change": "climate_environment",
+"low carbon": "climate_environment",
+"renewable energy": "climate_environment",
+"carbon emission": "climate_environment",
+"carbon emissions": "climate_environment",
+"carbon dioxide": "climate_environment",
+"carbon-dioxide": "climate_environment",
+"co2 emission": "climate_environment",
+"co2 emissions": "climate_environment",
+"climate pollutant": "climate_environment",
+"climate pollutants": "climate_environment",
+"decarbonization": "climate_environment",
+"decarbonisation": "climate_environment",
+"carbon neutral": "climate_environment",
+"carbon-neutral": "climate_environment",
+"carbon neutrality": "climate_environment",
+"climate neutrality": "climate_environment",
+"net-zero": "climate_environment",
+"net zero": "climate_environment",
+"ghge": "climate_environment",
+"ghges": "climate_environment",
+"precipitation": "climate_environment",
+"rainfall": "climate_environment",
+"humidity": "climate_environment",
+"monsoon": "climate_environment",
+"el nino": "climate_environment",
+"enso": "climate_environment",
+"sea surface temperature": "climate_environment",
+"sea surface temperatures": "climate_environment",
+"sst": "climate_environment",
+"snowmelt": "climate_environment",
+"storm": "climate_environment",
+"cyclone": "climate_environment",
+"cyclones": "climate_environment",
+"hurricane": "climate_environment",
+"hurricanes": "climate_environment",
+"typhoon": "climate_environment",
+"typhoons": "climate_environment",
+"sea-level": "climate_environment",
+"sea level": "climate_environment",
+"wild-fire": "climate_environment",
+"forest-fire": "climate_environment",
+"forest fire": "climate_environment",
+"forest fires": "climate_environment",
+"extreme heat event": "climate_environment",
+"extreme heat events": "climate_environment",
+"heat-wave": "climate_environment",
+"heat index": "climate_environment",
+"heat indices": "climate_environment",
+"cold index": "climate_environment",
+"cold indices": "climate_environment",
+"extreme-cold": "climate_environment",
+"extreme cold": "climate_environment",
+"hydroclim": "climate_environment",
+"disaster risk": "climate_environment",
+"disaster management": "climate_environment",
+"natural disaster": "climate_environment",
+"natural disaster risk": "climate_environment",
+"hydrochloroflourocarbon": "climate_environment",
+"hydrochloroflourocarbons": "climate_environment",
+"hfc": "climate_environment",
+"hfcs": "climate_environment",
+"so4": "climate_environment",
+"n20": "climate_environment",
+"halogen": "climate_environment",
+"chlorocarbon": "climate_environment",
+"chlorocarbons": "climate_environment",
+"pm25": "climate_environment",
+"nh3": "climate_environment",
+"sox": "climate_environment",
+"o3": "climate_environment",
+"ccl4": "climate_environment",
+"nmvoc": "climate_environment",
+"so2": "climate_environment",
+"co": "climate_environment",
+"nitrous": "climate_environment",
+"ch4": "climate_environment",
+"sulphur": "climate_environment",
+"voc": "climate_environment",
+"ozone": "climate_environment",
+"emitter": "climate_environment",
+"emitting": "climate_environment",
+"mitigate": "climate_environment",
+"mitigation": "climate_environment",
+
+# --- Vector-borne & Zoonotic Diseases ---
+"vector-borne disease": "vector_borne_zoonotic",
+"vector-borne diseases": "vector_borne_zoonotic",
+"zoonoses": "vector_borne_zoonotic",
+"zoonotic disease": "vector_borne_zoonotic",
+"dengue": "vector_borne_zoonotic",
+"chikungunya": "vector_borne_zoonotic",
+"zika": "vector_borne_zoonotic",
+"yellow fever": "vector_borne_zoonotic",
+"west nile fever": "vector_borne_zoonotic",
+"japanese encephalitis": "vector_borne_zoonotic",
+"tick-borne encephalitis": "vector_borne_zoonotic",
+"lyme disease": "vector_borne_zoonotic",
+"borreliosis": "vector_borne_zoonotic",
+"plague": "vector_borne_zoonotic",
+"onchocerciasis": "vector_borne_zoonotic",
+"river blindness": "vector_borne_zoonotic",
+"lymphatic filariasis": "vector_borne_zoonotic",
+"sleeping sickness": "vector_borne_zoonotic",
+"trypanosomiasis": "vector_borne_zoonotic",
+"american trypanosomiasis": "vector_borne_zoonotic",
+"chagas disease": "vector_borne_zoonotic",
+"ross river fever": "vector_borne_zoonotic",
+"ross river virus": "vector_borne_zoonotic",
+"barmah forest virus": "vector_borne_zoonotic",
+"leishmaniasis": "vector_borne_zoonotic",
+"schistosomiasis": "vector_borne_zoonotic",
+"bilharziasis": "vector_borne_zoonotic",
+"tungiasis": "vector_borne_zoonotic",
+
+# --- Food & Waterborne Illnesses ---
+"salmonella": "food_waterborne",
+"salmonellosis": "food_waterborne",
+"campylobacter": "food_waterborne",
+"campylobacteriosis": "food_waterborne",
+"shigella": "food_waterborne",
+"shigellosis": "food_waterborne",
+"giardia": "food_waterborne",
+"giardiasis": "food_waterborne",
+"cryptosporidium": "food_waterborne",
+"cryptosporidiosis": "food_waterborne",
+"legionella": "food_waterborne",
+"legionellosis": "food_waterborne",
+"vibrio bacteria": "food_waterborne",
+"food-borne disease": "food_waterborne",
+"food-borne diseases": "food_waterborne",
+"food-borne pathogens": "food_waterborne",
+"waterborne disease": "food_waterborne",
+"waterborne diseases": "food_waterborne",
+"aflatoxin": "food_waterborne",
+"mycotoxins": "food_waterborne",
+"arsenic": "food_waterborne",
+"botulism": "food_waterborne",
+"ciguatera": "food_waterborne",
+"poisoning": "food_waterborne",
+
+# --- Pathogens & Microbiology ---
+"bacteria": "pathogens_microbiology",
+"virus": "pathogens_microbiology",
+"viral infection": "pathogens_microbiology",
+"parasite": "pathogens_microbiology",
+"protozoa": "pathogens_microbiology",
+"prion": "pathogens_microbiology",
+"toxins": "pathogens_microbiology"
 }
 
 # ============================================================
-# LEGAL OBLIGATION + NEGATION
+# LOGGING
+# ============================================================
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+# ============================================================
+# NLP
+# ============================================================
+nlp = spacy.load("en_core_web_sm", disable=["ner", "parser"])
+nlp.add_pipe("sentencizer")
+
+# ============================================================
+# LOAD KEYWORDS
+# ============================================================
+def load_keyword_set(path: str) -> List[str]:
+    with open(path, "r", encoding="utf-8") as f:
+        return [line.strip() for line in f if line.strip()]
+
+# ============================================================
+# OBLIGATION & NEGATION REGEX
 # ============================================================
 OBLIGATION_REGEX = re.compile(
     r"\b(shall|must|is required to|are required to|shall ensure|must ensure|shall establish|"
@@ -466,25 +574,18 @@ def extract_relevant_windows(text: str, health_terms: List[str],
     return "\n\n".join(" ".join(words[s:e]) for s, e in merged)
 
 # ============================================================
-# HEALTH TERM EXTRACTION & CATEGORY MAPPING
+# HEALTH KEYWORD EXTRACTION
 # ============================================================
 def extract_health_keywords(text, canonical_keywords, chunk_size=4000):
-    """
-    Efficient extraction of health keywords from text.
-    Handles non-English text via translation, set-based keyword matching, 
-    and avoids per-chunk keyword loops.
-    """
     if not text or not isinstance(text, str):
         return ""
 
-    # --- Pre-clean the text once ---
     text_clean = re.sub(r"\[image\]|\[.*?\]", " ", text)
     text_clean = re.sub(r"[^\x00-\x7F]+", " ", text_clean)
     text_clean = re.sub(r"\s+", " ", text_clean).strip()
     if not text_clean:
         return ""
 
-    # --- Language detection & translation ---
     try:
         lang = detect(text_clean[:1000])
         if lang != "en":
@@ -493,17 +594,14 @@ def extract_health_keywords(text, canonical_keywords, chunk_size=4000):
                 chunk = text_clean[start:start + chunk_size]
                 translated_chunks.append(GoogleTranslator(source=lang, target="en").translate(chunk))
             text_clean = " ".join(translated_chunks)
-    except Exception as e:
-        # fallback to original text if detection/translation fails
+    except Exception:
         pass
 
-    # --- Fast keyword matching using set intersection ---
     text_words = set(re.findall(r'\w+', text_clean.lower()))
     keyword_set = set(kw.lower() for kw in canonical_keywords)
     found_keywords = text_words.intersection(keyword_set)
 
     return ";".join(sorted(found_keywords))
-
 
 def map_terms_to_categories(term_string, mapping_dict):
     if not term_string or not isinstance(term_string, str):
@@ -516,7 +614,7 @@ def map_terms_to_categories(term_string, mapping_dict):
 # PROCESS DOCUMENT
 # ============================================================
 def process_document(row, extractor, health_terms, adaptation_terms, health_authority_terms, idx, total):
-    doc_id = row["Document ID"]
+    doc_id = row.get("Document ID", "")
     print(f"[{idx+1}/{total}] Processing Doc ID: {doc_id}")
 
     country = row.get("Geographies", "")
@@ -530,38 +628,33 @@ def process_document(row, extractor, health_terms, adaptation_terms, health_auth
     extracted_text = ""
     notes = ""
 
-    # 1️⃣ Try content_url with fallback_url together
-    if isinstance(content_url, str) and content_url.startswith("http"):
-        try:
-            result = extractor.extract(content_url, fallback_url=fallback_url)
-            if isinstance(result, dict):
-                extracted_text = result.get("text", "")
-                metadata = result.get("metadata", {})
-                if metadata.get("ssl_bypassed"):
-                    notes += " | SSL bypass used"
-                if metadata.get("source") == "browser":
-                    notes += " | Retssystem PDF via browser"
-            elif isinstance(result, str):
-                extracted_text = result
-        except Exception as e:
-            print(f"   ⚠ Error extracting content/fallback URL: {e}")
-            notes = f"Extraction error: {e}"
+    # Sequential URL extraction
+    for url in [content_url, fallback_url]:
+        if isinstance(url, str) and url.startswith("http"):
+            try:
+                result = extractor.extract(url)
+                if isinstance(result, dict):
+                    extracted_text = result.get("text", "")
+                    metadata = result.get("metadata", {})
+                    if metadata.get("ssl_bypassed"):
+                        notes += " | SSL bypass used"
+                    if metadata.get("source") == "browser":
+                        notes += " | Retssystem PDF via browser"
+                elif isinstance(result, str):
+                    extracted_text = result
+                if extracted_text and extracted_text.strip():
+                    break
+            except Exception as e:
+                notes += f" | Extraction failed for URL {url}: {e}"
 
-    # 2️⃣ Translate & normalize
-    text = ""
-    if extracted_text and extracted_text.strip():
-        try:
-            text = detect_and_translate(extracted_text)
-        except Exception as e:
-            print(f"   ⚠ Translation failed: {e}")
-            text = extracted_text
+    # Translation & normalization
+    text = extracted_text.strip() if extracted_text else ""
+    if text:
+        text = detect_and_translate(text)
     else:
-        if notes:
-            notes += " | Extraction failed"
-        else:
-            notes = "Extraction failed"
+        notes += " | Extraction returned no text"
 
-    # Initialize default values
+    # Flags & keyword containers
     health_relevance = 0
     health_mandate = 0
     institutional_role = 0
@@ -577,16 +670,13 @@ def process_document(row, extractor, health_terms, adaptation_terms, health_auth
             doc = nlp(chunk_text)
             sentences = [s.text for s in doc.sents]
 
-            # Extract windows with health terms
             chunk_extract = extract_relevant_windows(chunk_text, health_terms)
             if chunk_extract:
                 extracted_chunks.append(chunk_extract)
 
-            # Institutional health role
             if contains_any(chunk_text, health_authority_terms):
                 institutional_role = 1
 
-            # Health adaptation mandate
             for s in sentences:
                 if contains_any(s, health_terms) and (contains_any(s, adaptation_terms) or has_obligation(s)):
                     health_mandate = 1
@@ -617,11 +707,9 @@ def process_document(row, extractor, health_terms, adaptation_terms, health_auth
         "Notes": notes
     }
 
-
 # ============================================================
-# MAIN
+# MAIN PIPELINE
 # ============================================================
-
 def main():
     logging.info("PIPELINE STARTED")
 
@@ -632,16 +720,12 @@ def main():
 
     df = pd.read_csv(INPUT_DATA)
     df['Year'] = pd.to_datetime(df['First event in timeline'], errors='coerce').dt.year
-    #df = df[~df["Document Content URL"].isna()] # So that fallback URL is also considered
-
     total_docs = len(df)
 
-    # Remove old output file if it exists
     if os.path.exists(OUTPUT_FILE):
         os.remove(OUTPUT_FILE)
 
     for idx, row in df.iterrows():
-
         try:
             row_result = process_document(
                 row,
@@ -652,27 +736,16 @@ def main():
                 idx,
                 total_docs
             )
-
         except Exception as e:
             logging.warning(f"Processing failed for index {idx}: {e}")
-
-            # Even if it crashes, still save row with defaults
-            row_result = {
-                "Doc ID": row.get("Document ID", ""),
-                "Family ID": row.get("Family ID", ""),
-                "Country": row.get("Geographies", ""),
-                "ISO3": row.get("Geography ISOs", ""),  
-                "Year": row.get("Year", ""),
-                "Response": row.get("Topic/Response", ""),
+            row_result = {col: "" for col in OUTPUT_COLUMNS}
+            row_result.update({
                 "Health relevance (1/0)": 0,
                 "Health adaptation mandate (1/0)": 0,
                 "Institutional health role (1/0)": 0,
-                "Matched health keywords": "",
-                "Health keyword categories": "",
                 "Notes": "Processing failed"
-            }
+            })
 
-        # ✅ SAVE AFTER EVERY DOCUMENT
         pd.DataFrame([row_result]).to_csv(
             OUTPUT_FILE,
             mode='a',
@@ -682,7 +755,6 @@ def main():
 
         print(f"[{idx+1}/{total_docs}] Saved Doc ID {row_result.get('Doc ID')}")
 
-        # ✅ Free memory immediately
         del row_result
         gc.collect()
 
@@ -694,4 +766,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

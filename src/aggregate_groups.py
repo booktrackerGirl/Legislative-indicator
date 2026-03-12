@@ -38,8 +38,8 @@ def aggregate_health_stocks(panel_csv, annotations_csv, output_excel, grouping_c
     annotations = pd.read_csv(annotations_csv)
 
     # Rename Doc ID if needed
-    if "Doc ID" in annotations.columns:
-        annotations = annotations.rename(columns={"Doc ID": "Document ID"})
+    '''if "Doc ID" in annotations.columns:
+        annotations = annotations.rename(columns={"Doc ID": "Document ID"})'''
 
     # Fill NaNs
     for col in HEALTH_FEATURES:
@@ -48,7 +48,7 @@ def aggregate_health_stocks(panel_csv, annotations_csv, output_excel, grouping_c
     annotations["Response"] = annotations["Response"].fillna("")
 
     # Merge panel + annotations
-    df = panel.merge(annotations, on="Document ID", how="inner")
+    df = panel.merge(annotations, on="Family ID", how="inner")
 
     # Ensure Year column exists
     if "Year_x" in df.columns:
@@ -81,7 +81,7 @@ def aggregate_health_stocks(panel_csv, annotations_csv, output_excel, grouping_c
 
             for year in years:
                 # Active docs = all docs with Year <= current year
-                active_docs = df[df["Year"] <= year].drop_duplicates(subset=["Document ID"])
+                active_docs = df[df["Year"] <= year].drop_duplicates(subset=["Family ID"])
 
                 # If no docs for a group yet, we still want a row with 0
                 group_values = active_docs[group_col].unique()
@@ -125,7 +125,7 @@ def aggregate_health_stocks(panel_csv, annotations_csv, output_excel, grouping_c
         # -------------------------------
         global_records = []
         for year in years:
-            active_docs = df[df["Year"] <= year].drop_duplicates(subset=["Document ID"])
+            active_docs = df[df["Year"] <= year].drop_duplicates(subset=["Family ID"])
             rec = {"Year": year}
             for col in HEALTH_FEATURES + RESPONSE_TOPICS + list(CATEGORY_LABELS.keys()):
                 rec[col] = active_docs[col].sum()
@@ -147,7 +147,7 @@ def aggregate_health_stocks(panel_csv, annotations_csv, output_excel, grouping_c
 def main():
     parser = argparse.ArgumentParser(description="Aggregate health-relevant policy stocks by groups and year")
 
-    parser.add_argument("--panel", required=True, help="Panel CSV with Document ID and Year")
+    parser.add_argument("--panel", required=True, help="Panel CSV with Family ID and Year")
     parser.add_argument("--annotations", required=True, help="Health annotations CSV")
     parser.add_argument("--output", required=True, help="Output Excel file")
     parser.add_argument("--group-cols", nargs="+", required=True, help="Grouping columns (e.g. Country WHO HDI LC)")

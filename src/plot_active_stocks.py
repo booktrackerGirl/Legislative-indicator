@@ -16,14 +16,14 @@ MARKERS = ["o", "s", "^", "D", "v", "P", "*", "X", "<", ">"]  # cycle markers if
 def compute_active_stock_by_region(annotation_df, panel_df, group_col="LC"):
 
     # Harmonize IDs
-    if "Doc ID" in annotation_df.columns:
-        annotation_df = annotation_df.rename(columns={"Doc ID": "Document ID"})
+    '''if "Doc ID" in annotation_df.columns:
+        annotation_df = annotation_df.rename(columns={"Doc ID": "Document ID"})'''
     
     # Keep health-relevant only
     annotation_df = annotation_df[annotation_df["Health relevance (1/0)"] >= 1].copy()
 
     # Merge panel and annotation data
-    df = panel_df.merge(annotation_df, on="Document ID", how="inner")
+    df = panel_df.merge(annotation_df, on="Family ID", how="inner")
 
     # Resolve overlapping 'Year' columns if needed
     if "Year_x" in df.columns:
@@ -42,7 +42,7 @@ def compute_active_stock_by_region(annotation_df, panel_df, group_col="LC"):
 
     # Compute active stock per year for each group
     for g in groups:
-        group_docs = df[df[group_col] == g]["Document ID"].unique()
+        group_docs = df[df[group_col] == g]["Family ID"].unique()
         active_set = set()
         yearly_totals = []
 
@@ -50,7 +50,7 @@ def compute_active_stock_by_region(annotation_df, panel_df, group_col="LC"):
             # New documents starting this year
             new_docs = set(df.loc[
                 (df[group_col] == g) & (df["Year"] == year),
-                "Document ID"
+                "Family ID"
             ])
             active_set = active_set.union(new_docs)
             yearly_totals.append(len(active_set))

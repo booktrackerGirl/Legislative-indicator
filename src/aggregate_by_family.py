@@ -60,7 +60,17 @@ def aggregate_family(group):
 # ===============================
 # AGGREGATE BY FAMILY ID
 # ===============================
-df_family = df.groupby("Family ID").apply(aggregate_family).reset_index(drop=True)
+df_family = df.groupby("Family ID").agg({
+    "Country": "first",
+    "ISO3": "first",
+    "Year": "first",
+    "Response": "first",
+    "Health relevance (1/0)": "max",
+    "Health adaptation mandate (1/0)": "max",
+    "Institutional health role (1/0)": "max",
+    "Matched health keywords": lambda x: ";".join(sorted(set(";".join(x.dropna()).split(";")))),
+    "Health keyword categories": lambda x: ";".join(sorted(set(";".join(x.dropna()).split(";")))),
+}).reset_index()
 
 # ===============================
 # SAVE OUTPUT
