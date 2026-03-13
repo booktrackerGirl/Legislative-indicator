@@ -151,7 +151,7 @@ def main(annotations_csv, panel_csv, shapefile, output_png, output_pdf):
     plot_world_map(
         shapefile,
         agg2,
-        "Global Institutional Health Roles in Climate Law (2016–2025)",
+        "Global Institutional Health Roles in Climate Legislative Documents (2016–2025)",
         axes[1],
         cmap,
         norm
