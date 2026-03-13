@@ -275,7 +275,7 @@ python ./src/aggregate_groups.py \
 Scripts in the `src/` directory are modular and can be executed sequentially:
 
 ```
-chmod +x src/full_execution_pipeline.sh.sh
+chmod +x src/full_execution_pipeline.sh
 ./src/full_execution_pipeline.sh.sh
 ```
 
