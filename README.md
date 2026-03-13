@@ -270,7 +270,7 @@ python ./src/aggregate_groups.py \
 **Output:** Multi‑sheet Excel summarising trends by region.
 
 ---
-## Run the Analysis Pipeline
+## 🛠️ Run the Analysis Pipeline
 
 Scripts in the `src/` directory are modular and can be executed sequentially:
 
