@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e  # stop on error
+set -e  # stop execution on error
 
 echo "========================================"
 echo "Climate-Health Policy Pipeline Starting"
@@ -13,164 +13,204 @@ mkdir -p annotation
 mkdir -p outputs/dataframes
 mkdir -p outputs/figures
 
+
 # -----------------------------
 # Step 1 — Health relevance extraction
 # -----------------------------
-echo "Step 1: Running health relevance pipeline..."
-
+# Extracts and annotates health-related content from all documents, detecting:
+# - Health relevance
+# - Adaptation mandates (optional)
+# - Institutional health roles
+# Produces a CSV with one row per document including matched keywords and categories
 python ./src/health_relevance_pipeline.py
-
-echo "Health annotation completed."
 
 
 # -----------------------------
 # Step 2 — Aggregate by Family ID
 # -----------------------------
-echo "Step 2: Aggregating annotations by Family ID..."
-
-python aggregate_by_family.py \
-    -i ./annotation/health_annotations_1.csv \
-    -o ./annotation/health_annotations_by_family.csv
-
-echo "Family aggregation completed."
+# Aggregates document-level annotations to Family ID level:
+# - Binary indicators set to 1 if any document in the family has it
+# - Merges keywords and categories
+# - Metadata (Country, ISO3, Year, Response) taken from the first record
+python ./src/aggregate_by_family.py \
+    -i ./annotation/health_annotations.csv \
+    -o ./annotation/health_annotations_family.csv
 
 
 # -----------------------------
-# Step 3 — Merge ISO3 country lookup
+# Step 3 — Merge ISO3 lookup
 # -----------------------------
-echo "Step 3: Merging ISO3 lookup..."
-
+# Adds standardized ISO3 country codes and metadata to the Family-level dataset
 python ./src/merge_iso3.py \
-  --main_csv ./annotation/health_annotations_by_family.csv \
-  --lookup_csv ./annotation/iso3_lookup.csv \
-  --output ./annotation/health_annotations_with_iso3.csv
-
-echo "ISO3 merge completed."
+    --main_csv ./annotation/health_annotations_family.csv \
+    --lookup_csv ./annotation/iso3_lookup.csv \
+    --output ./annotation/health_annotations_with_iso3.csv
 
 
 # -----------------------------
-# Step 4 — Create policy-year panel
+# Step 4 — Create yearly policy panel
 # -----------------------------
-echo "Step 4: Creating yearly policy panel..."
-
+# Expands each policy across all years it remains active
 python ./src/create_yearly_panel.py \
- --input ./data/CCLW_legislative.csv \
- --output ./outputs/dataframes/policy_year_panel.csv
-
-echo "Policy panel created."
+    --input ./data/CCLW_legislative.csv \
+    --output ./outputs/dataframes/policy_year_panel.csv
 
 
 # -----------------------------
-# Step 5 — Global world map
+# Step 5 — Global world map (2000–2025)
 # -----------------------------
-echo "Step 5: Creating global world map..."
-
+# Produces a choropleth map of cumulative health-relevant documents per country
 python ./src/create_worldmap_2000.py \
- --input_csv ./annotation/health_annotations_with_iso3.csv \
- --panel ./outputs/dataframes/policy_year_panel.csv \
- --shapefile ./shapefiles/WB_GAD_ADM0_complete.shp \
- --output_png ./outputs/figures/health_world_map.png \
- --output_pdf ./outputs/figures/health_world_map.pdf
-
-echo "World map created."
+    --input_csv ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --shapefile ./shapefiles/WB_GAD_ADM0_complete.shp \
+    --output_png ./outputs/figures/health_world_map.png \
+    --output_pdf ./outputs/figures/health_world_map.pdf
 
 
 # -----------------------------
-# Step 6 — Pre/Post Paris world map
+# Step 6 — Pre/Post Paris map
 # -----------------------------
-echo "Step 6: Creating pre/post Paris map..."
-
+# Similar to Step 5, but splits the data into pre-2016 vs post-2015
 python ./src/create_world_map.py \
- --annotation ./annotation/health_annotations_with_iso3.csv \
- --panel ./outputs/dataframes/policy_year_panel.csv \
- --shapefile ./shapefiles/WB_GAD_ADM0_complete.shp \
- --output_png ./outputs/figures/worldmap_prepost2015.png \
- --output_pdf ./outputs/figures/worldmap_prepost2015.pdf
-
-echo "Pre/Post map created."
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --shapefile ./shapefiles/WB_GAD_ADM0_complete.shp \
+    --output_png ./outputs/figures/worldmap_prepost2015.png \
+    --output_pdf ./outputs/figures/worldmap_prepost2015.pdf
 
 
 # -----------------------------
-# Step 7 — Global health categories stackplot
+# Step 7 — Institutional health roles map
 # -----------------------------
-echo "Step 7: Plotting global health category trends..."
+# Maps global distribution of policies that mention institutional health roles
+python ./src/map_institutional_health_roles.py \
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --shapefile ./shapefiles/WB_GAD_ADM0_complete.shp \
+    --output_png ./outputs/figures/institutional_health_roles_map.png \
+    --output_pdf ./outputs/figures/institutional_health_roles_map.pdf
 
+
+# -----------------------------
+# Step 8 — Global health category trends
+# -----------------------------
+# Plots stacked area charts of active health-relevant documents by category over time
 python ./src/plot_global_health_categories.py \
- --annotation ./annotation/health_annotations_with_iso3.csv \
- --legis ./data/CCLW_legislative.csv \
- --output ./outputs/figures/global_health_categories.pdf
-
-echo "Global health categories plot completed."
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --legis ./data/CCLW_legislative.csv \
+    --output ./outputs/figures/global_health_categories.pdf
 
 
 # -----------------------------
-# Step 8 — Global response stackplot
+# Step 9 — Global response trends
 # -----------------------------
-echo "Step 8: Plotting global response trends..."
-
+# Plots stacked area charts showing active documents by response type
 python ./src/plot_global_response_stackplot.py \
- --annotation ./annotation/health_annotations_with_iso3.csv \
- --legis ./data/CCLW_legislative.csv \
- --output ./outputs/figures/global_policy_stackplot.pdf
-
-echo "Global response stackplot completed."
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --legis ./data/CCLW_legislative.csv \
+    --output ./outputs/figures/global_policy_stackplot.pdf
 
 
 # -----------------------------
-# Step 9 — Regional response trends
+# Step 10 — Regional response trends
 # -----------------------------
-echo "Step 9: Plotting regional response trends..."
+# Line plots of active stock trends for each region (LC, WHO, HDI)
+python ./src/plot_regional_response_trend.py \
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --group_col LC \
+    --output ./outputs/figures/regional_response_trends_LC.pdf
 
 python ./src/plot_regional_response_trend.py \
- --annotation ./annotation/health_annotations_with_iso3.csv \
- --panel ./outputs/dataframes/policy_year_panel.csv \
- --group_col LC \
- --output ./outputs/figures/regional_response_trends_LC.pdf
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --group_col WHO \
+    --output ./outputs/figures/regional_response_trends_WHO.pdf
 
-echo "Regional response trends completed."
+python ./src/plot_regional_response_trend.py \
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --group_col HDI \
+    --output ./outputs/figures/regional_response_trends_HDI.pdf
 
 
 # -----------------------------
-# Step 10 — Regional health category trends
+# Step 11 — Regional health category trends
 # -----------------------------
-echo "Step 10: Plotting regional health category trends..."
+# Line plots of active stock trends by health category for each region
+python ./src/plot_regional_health_category_trend.py \
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --group_col WHO \
+    --output ./outputs/figures/regional_health_trends_WHO.pdf
 
 python ./src/plot_regional_health_category_trend.py \
- --annotation ./annotation/health_annotations_with_iso3.csv \
- --panel ./outputs/dataframes/policy_year_panel.csv \
- --group_col WHO \
- --output ./outputs/figures/regional_health_trends_WHO.pdf
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --group_col HDI \
+    --output ./outputs/figures/regional_health_trends_HDI.pdf
 
-echo "Regional health category trends completed."
+python ./src/plot_regional_health_category_trend.py \
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --group_col LC \
+    --output ./outputs/figures/regional_health_trends_LC.pdf
 
 
 # -----------------------------
-# Step 11 — Active stock trends
+# Step 12 — Active stock trends
 # -----------------------------
-echo "Step 11: Plotting regional stock trends..."
+# Time series plots of cumulative health-relevant legislative documents
+python ./src/plot_active_stocks.py \
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --group_col WHO \
+    --output ./outputs/figures/global_regional_trends_WHO.pdf
 
 python ./src/plot_active_stocks.py \
- --annotation ./annotation/health_annotations_with_iso3.csv \
- --panel ./outputs/dataframes/policy_year_panel.csv \
- --group_col WHO \
- --output ./outputs/figures/global_regional_trends_WHO.pdf
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --group_col HDI \
+    --output ./outputs/figures/global_regional_trends_HDI.pdf
 
-echo "Regional stock plot completed."
+python ./src/plot_active_stocks.py \
+    --annotation ./annotation/health_annotations_with_iso3.csv \
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --group_col LC \
+    --output ./outputs/figures/global_regional_trends_LC.pdf
 
 
 # -----------------------------
-# Step 12 — Aggregated data output
+# Step 13 — Regional cascade bars
 # -----------------------------
-echo "Step 12: Creating aggregated dataset..."
+# Clustered bar plots (pre/post 2015) showing Total → Health relevance → Institutional health roles
+python ./src/create_regional_health_bars.py \
+    --input ./annotation/health_annotations_with_iso3.csv \
+    --region HDI \
+    --output ./outputs/figures/regional_health_cascade_bars_pre_post_2015_HDI.pdf
 
+python ./src/create_regional_health_bars.py \
+    --input ./annotation/health_annotations_with_iso3.csv \
+    --region WHO \
+    --output ./outputs/figures/regional_health_cascade_bars_pre_post_2015_WHO.pdf
+
+python ./src/create_regional_health_bars.py \
+    --input ./annotation/health_annotations_with_iso3.csv \
+    --region LC \
+    --output ./outputs/figures/regional_health_cascade_bars_pre_post_2015_LC.pdf
+
+
+# -----------------------------
+# Step 14 — Aggregated dataset
+# -----------------------------
+# Produces a multi-sheet Excel file summarizing health-relevant policies by WHO, HDI, LC
 python ./src/aggregate_groups.py \
-  --panel ./outputs/dataframes/policy_year_panel.csv \
-  --annotations ./annotation/health_annotations_with_iso3.csv \
-  --output ./outputs/dataframes/aggregated_data_file.xlsx \
-  --group-cols Country WHO HDI LC \
-  --start-year 2000
-
-echo "Aggregated dataset created."
+    --panel ./outputs/dataframes/policy_year_panel.csv \
+    --annotations ./annotation/health_annotations_with_iso3.csv \
+    --output ./outputs/dataframes/aggregated_data_file.xlsx \
+    --group-cols WHO HDI LC \
+    --start-year 2000
 
 
 echo "========================================"
