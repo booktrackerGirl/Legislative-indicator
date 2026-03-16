@@ -1,0 +1,401 @@
+term,category_label
+health,General Health & Services
+well-being,General Health & Services
+wellbeing,General Health & Services
+medical,General Health & Services
+healthcare,General Health & Services
+health care,General Health & Services
+health service,General Health & Services
+health clinic,General Health & Services
+hospital,General Health & Services
+hospitalisation,General Health & Services
+doctor,General Health & Services
+gp,General Health & Services
+health emergency,General Health & Services
+emergency,General Health & Services
+diagnosis,General Health & Services
+clinical,General Health & Services
+patients,General Health & Services
+emergency department,General Health & Services
+a&e,General Health & Services
+mortality,Mortality & Morbidity
+morbidity,Mortality & Morbidity
+daly,Mortality & Morbidity
+death,Mortality & Morbidity
+deaths,Mortality & Morbidity
+loss of life,Mortality & Morbidity
+loss of lives,Mortality & Morbidity
+human life,Mortality & Morbidity
+injury,Injury & Trauma
+injuries,Injury & Trauma
+accident,Injury & Trauma
+traumatic injury,Injury & Trauma
+fatigue,Injury & Trauma
+trauma,Injury & Trauma
+traumatic,Injury & Trauma
+disease,Communicable Diseases
+diseases,Communicable Diseases
+ill,Communicable Diseases
+illness,Communicable Diseases
+illnesses,Communicable Diseases
+syndrome,Communicable Diseases
+infection,Communicable Diseases
+infections,Communicable Diseases
+epidemiology,Communicable Diseases
+epidemic,Communicable Diseases
+epidemics,Communicable Diseases
+pandemic,Communicable Diseases
+pandemics,Communicable Diseases
+malaria,Communicable Diseases
+diarrhoea,Communicable Diseases
+diarrhea,Communicable Diseases
+diarrheal disease,Communicable Diseases
+diarrhoeal disease,Communicable Diseases
+cholera,Communicable Diseases
+typhoid,Communicable Diseases
+dysentery,Communicable Diseases
+leptospirosis,Communicable Diseases
+polio,Communicable Diseases
+measles,Communicable Diseases
+sars,Communicable Diseases
+severe acute respiratory syndrome,Communicable Diseases
+tuberculosis,Communicable Diseases
+tb,Communicable Diseases
+influenza,Communicable Diseases
+flu,Communicable Diseases
+pneumonia,Communicable Diseases
+respiratory tract infection,Communicable Diseases
+covid-19,Communicable Diseases
+covid,Communicable Diseases
+coronavirus disease 2019,Communicable Diseases
+coronavirus,Communicable Diseases
+ebola,Communicable Diseases
+hepatitis,Communicable Diseases
+hiv,Communicable Diseases
+human immunodeficiency virus,Communicable Diseases
+aids,Communicable Diseases
+acquired immunodeficiency syndrome,Communicable Diseases
+sexually transmitted infection,Communicable Diseases
+sexually transmitted infections,Communicable Diseases
+sexually transmitted disease,Communicable Diseases
+fever,Communicable Diseases
+feverish,Communicable Diseases
+sepsis,Communicable Diseases
+ncd,Non-Communicable Diseases
+ncds,Non-Communicable Diseases
+non-communicable disease,Non-Communicable Diseases
+non-communicable diseases,Non-Communicable Diseases
+cardiovascular disease,Non-Communicable Diseases
+cvd,Non-Communicable Diseases
+heart disease,Non-Communicable Diseases
+heart attack,Non-Communicable Diseases
+heart attacks,Non-Communicable Diseases
+heart failure,Non-Communicable Diseases
+coronary heart disease,Non-Communicable Diseases
+chd,Non-Communicable Diseases
+ischaemic heart disease,Non-Communicable Diseases
+cerebrovascular disease,Non-Communicable Diseases
+stroke,Non-Communicable Diseases
+peripheral arterial disease,Non-Communicable Diseases
+congenital heart disease,Non-Communicable Diseases
+rheumatic heart disease,Non-Communicable Diseases
+deep vein thrombosis,Non-Communicable Diseases
+pulmonary embolism,Non-Communicable Diseases
+hypertension,Non-Communicable Diseases
+blood pressure,Non-Communicable Diseases
+diabetes,Non-Communicable Diseases
+chronic kidney disease,Non-Communicable Diseases
+ckd,Non-Communicable Diseases
+renal disease,Non-Communicable Diseases
+kidney disease,Non-Communicable Diseases
+cancer,Non-Communicable Diseases
+chronic respiratory disease,Non-Communicable Diseases
+chronic obstructive pulmonary disease,Non-Communicable Diseases
+copd,Non-Communicable Diseases
+chronic bronchitis,Non-Communicable Diseases
+emphysema,Non-Communicable Diseases
+asthma,Non-Communicable Diseases
+bronchial asthma,Non-Communicable Diseases
+allergic asthma,Non-Communicable Diseases
+respiratory illness,Non-Communicable Diseases
+respiratory conditions,Non-Communicable Diseases
+respiratory,Non-Communicable Diseases
+lung disease,Non-Communicable Diseases
+pulmonary disease,Non-Communicable Diseases
+bronchitis,Non-Communicable Diseases
+rhinitis,Non-Communicable Diseases
+hay fever,Non-Communicable Diseases
+wheezing,Non-Communicable Diseases
+allergies,Non-Communicable Diseases
+allergens,Non-Communicable Diseases
+immune system,Non-Communicable Diseases
+low birth weight,Maternal & Child Health
+lbw,Maternal & Child Health
+maternal health,Maternal & Child Health
+pregnancy,Maternal & Child Health
+pregnant,Maternal & Child Health
+gestation,Maternal & Child Health
+preterm birth,Maternal & Child Health
+stillbirth,Maternal & Child Health
+birth weight,Maternal & Child Health
+pre-eclampsia,Maternal & Child Health
+preeclampsia,Maternal & Child Health
+placenta,Maternal & Child Health
+oligohydramnios,Maternal & Child Health
+haemorrhage,Maternal & Child Health
+hemorrhage,Maternal & Child Health
+nutrition,Nutrition
+malnutrition,Nutrition
+malnourishment,Nutrition
+undernutrition,Nutrition
+undernourished,Nutrition
+stunting,Nutrition
+wasting,Nutrition
+underweight,Nutrition
+overweight,Nutrition
+obesity,Nutrition
+hunger,Nutrition
+anthropometry,Nutrition
+micronutrient,Nutrition
+micronutrient deficiency,Nutrition
+micronutrient excess,Nutrition
+anaemia,Nutrition
+anemia,Nutrition
+mental health,Mental Health
+mental,Mental Health
+mental illness,Mental Health
+mental disorder,Mental Health
+mental disorders,Mental Health
+mental health condition,Mental Health
+mental health disorder,Mental Health
+mental health service,Mental Health
+mental suffering,Mental Health
+depression,Mental Health
+depressed,Mental Health
+depressive disorder,Mental Health
+anxiety,Mental Health
+anxious,Mental Health
+phobia,Mental Health
+suicide,Mental Health
+suicidal,Mental Health
+stress,Mental Health
+stressful,Mental Health
+psychological stress,Mental Health
+psychological,Mental Health
+psychosocial,Mental Health
+psychiatric,Mental Health
+psychiatric hospital,Mental Health
+post-traumatic stress,Mental Health
+post-traumatic stress disorder,Mental Health
+ptsd,Mental Health
+grief,Mental Health
+grieving,Mental Health
+sadness,Mental Health
+anger,Mental Health
+despair,Mental Health
+distress,Mental Health
+distressed,Mental Health
+cognitive impairment,Mental Health
+cognitive disorder,Mental Health
+cognitive deficits,Mental Health
+impaired functioning,Mental Health
+loss of concentration,Mental Health
+insomnia,Mental Health
+sleep disorder,Mental Health
+sleep disruption,Mental Health
+sleeplessness,Mental Health
+eco-anxiety,Mental Health
+solastalgia,Mental Health
+ecological grief,Mental Health
+eco-grief,Mental Health
+emotion,Mental Health
+psychology,Mental Health
+substance use,Substance Use
+substance abuse,Substance Use
+drug use,Substance Use
+alcohol,Substance Use
+alcoholism,Substance Use
+air pollution,Environmental Health
+thermal stress,Environmental Health
+heat-related illness,Environmental Health
+heat-related illnesses,Environmental Health
+heat stress,Environmental Health
+heat exhaustion,Environmental Health
+heat cramp,Environmental Health
+heat stroke,Environmental Health
+hyperthermia,Environmental Health
+hypothermia,Environmental Health
+extreme heat,Environmental Health
+heatwave,Environmental Health
+high temperature,Environmental Health
+flood,Environmental Health
+drought,Environmental Health
+wildfire,Environmental Health
+bushfire,Environmental Health
+bushfires,Environmental Health
+algal bloom,Environmental Health
+temperature,Environmental Health
+storms,Environmental Health
+extreme weather,Environmental Health
+carbon,Environmental Health
+co2,Environmental Health
+methane,Environmental Health
+pm2.5,Environmental Health
+ghg,Environmental Health
+greenhouse,Environmental Health
+climate change,Climate & Environment
+changing climate,Climate & Environment
+climate emergency,Climate & Environment
+climate action,Climate & Environment
+climate crisis,Climate & Environment
+climate decay,Climate & Environment
+global warming,Climate & Environment
+green house,Climate & Environment
+greenhouse gas,Climate & Environment
+greenhouse-gas,Climate & Environment
+greenhouse effect,Climate & Environment
+greenhouse effects,Climate & Environment
+climate variability,Climate & Environment
+global environmental change,Climate & Environment
+low carbon,Climate & Environment
+renewable energy,Climate & Environment
+carbon emission,Climate & Environment
+carbon emissions,Climate & Environment
+carbon dioxide,Climate & Environment
+carbon-dioxide,Climate & Environment
+co2 emission,Climate & Environment
+co2 emissions,Climate & Environment
+climate pollutant,Climate & Environment
+climate pollutants,Climate & Environment
+decarbonization,Climate & Environment
+decarbonisation,Climate & Environment
+carbon neutral,Climate & Environment
+carbon-neutral,Climate & Environment
+carbon neutrality,Climate & Environment
+climate neutrality,Climate & Environment
+net-zero,Climate & Environment
+net zero,Climate & Environment
+ghge,Climate & Environment
+ghges,Climate & Environment
+precipitation,Climate & Environment
+rainfall,Climate & Environment
+humidity,Climate & Environment
+monsoon,Climate & Environment
+el nino,Climate & Environment
+enso,Climate & Environment
+sea surface temperature,Climate & Environment
+sea surface temperatures,Climate & Environment
+sst,Climate & Environment
+snowmelt,Climate & Environment
+storm,Climate & Environment
+cyclone,Climate & Environment
+cyclones,Climate & Environment
+hurricane,Climate & Environment
+hurricanes,Climate & Environment
+typhoon,Climate & Environment
+typhoons,Climate & Environment
+sea-level,Climate & Environment
+sea level,Climate & Environment
+wild-fire,Climate & Environment
+forest-fire,Climate & Environment
+forest fire,Climate & Environment
+forest fires,Climate & Environment
+extreme heat event,Climate & Environment
+extreme heat events,Climate & Environment
+heat-wave,Climate & Environment
+heat index,Climate & Environment
+heat indices,Climate & Environment
+cold index,Climate & Environment
+cold indices,Climate & Environment
+extreme-cold,Climate & Environment
+extreme cold,Climate & Environment
+hydroclim,Climate & Environment
+disaster risk,Climate & Environment
+disaster management,Climate & Environment
+natural disaster,Climate & Environment
+natural disaster risk,Climate & Environment
+hydrochloroflourocarbon,Climate & Environment
+hydrochloroflourocarbons,Climate & Environment
+hfc,Climate & Environment
+hfcs,Climate & Environment
+so4,Climate & Environment
+n20,Climate & Environment
+halogen,Climate & Environment
+chlorocarbon,Climate & Environment
+chlorocarbons,Climate & Environment
+pm25,Climate & Environment
+nh3,Climate & Environment
+sox,Climate & Environment
+o3,Climate & Environment
+ccl4,Climate & Environment
+nmvoc,Climate & Environment
+so2,Climate & Environment
+co,Climate & Environment
+nitrous,Climate & Environment
+ch4,Climate & Environment
+sulphur,Climate & Environment
+voc,Climate & Environment
+ozone,Climate & Environment
+emitter,Climate & Environment
+emitting,Climate & Environment
+mitigate,Climate & Environment
+mitigation,Climate & Environment
+vector-borne disease,Vector-borne & Zoonotic Diseases
+vector-borne diseases,Vector-borne & Zoonotic Diseases
+zoonoses,Vector-borne & Zoonotic Diseases
+zoonotic disease,Vector-borne & Zoonotic Diseases
+dengue,Vector-borne & Zoonotic Diseases
+chikungunya,Vector-borne & Zoonotic Diseases
+zika,Vector-borne & Zoonotic Diseases
+yellow fever,Vector-borne & Zoonotic Diseases
+west nile fever,Vector-borne & Zoonotic Diseases
+japanese encephalitis,Vector-borne & Zoonotic Diseases
+tick-borne encephalitis,Vector-borne & Zoonotic Diseases
+lyme disease,Vector-borne & Zoonotic Diseases
+borreliosis,Vector-borne & Zoonotic Diseases
+plague,Vector-borne & Zoonotic Diseases
+onchocerciasis,Vector-borne & Zoonotic Diseases
+river blindness,Vector-borne & Zoonotic Diseases
+lymphatic filariasis,Vector-borne & Zoonotic Diseases
+sleeping sickness,Vector-borne & Zoonotic Diseases
+trypanosomiasis,Vector-borne & Zoonotic Diseases
+american trypanosomiasis,Vector-borne & Zoonotic Diseases
+chagas disease,Vector-borne & Zoonotic Diseases
+ross river fever,Vector-borne & Zoonotic Diseases
+ross river virus,Vector-borne & Zoonotic Diseases
+barmah forest virus,Vector-borne & Zoonotic Diseases
+leishmaniasis,Vector-borne & Zoonotic Diseases
+schistosomiasis,Vector-borne & Zoonotic Diseases
+bilharziasis,Vector-borne & Zoonotic Diseases
+tungiasis,Vector-borne & Zoonotic Diseases
+salmonella,Food & Waterborne Illnesses
+salmonellosis,Food & Waterborne Illnesses
+campylobacter,Food & Waterborne Illnesses
+campylobacteriosis,Food & Waterborne Illnesses
+shigella,Food & Waterborne Illnesses
+shigellosis,Food & Waterborne Illnesses
+giardia,Food & Waterborne Illnesses
+giardiasis,Food & Waterborne Illnesses
+cryptosporidium,Food & Waterborne Illnesses
+cryptosporidiosis,Food & Waterborne Illnesses
+legionella,Food & Waterborne Illnesses
+legionellosis,Food & Waterborne Illnesses
+vibrio bacteria,Food & Waterborne Illnesses
+food-borne disease,Food & Waterborne Illnesses
+food-borne diseases,Food & Waterborne Illnesses
+food-borne pathogens,Food & Waterborne Illnesses
+waterborne disease,Food & Waterborne Illnesses
+waterborne diseases,Food & Waterborne Illnesses
+aflatoxin,Food & Waterborne Illnesses
+mycotoxins,Food & Waterborne Illnesses
+arsenic,Food & Waterborne Illnesses
+botulism,Food & Waterborne Illnesses
+ciguatera,Food & Waterborne Illnesses
+poisoning,Food & Waterborne Illnesses
+bacteria,Pathogens & Microbiology
+virus,Pathogens & Microbiology
+viral infection,Pathogens & Microbiology
+parasite,Pathogens & Microbiology
+protozoa,Pathogens & Microbiology
+prion,Pathogens & Microbiology
+toxins,Pathogens & Microbiology
