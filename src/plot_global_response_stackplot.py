@@ -137,7 +137,7 @@ def plot_global_stackplot(annotation_df, legis_df, output_path,
 
     ax.set_ylim(0, GLOBAL_Y_MAX)
     ax.set_ylabel("Legislative responses", fontsize=13)
-    ax.set_title("Active Climate-Health Legislative Documents Over Time in Europe",
+    ax.set_title("Global Active Climate-Health Legislative Documents Over Time",
                  fontsize=13, fontweight="bold", loc="left")
 
     step = 5 if len(YEARS) > 20 else 2

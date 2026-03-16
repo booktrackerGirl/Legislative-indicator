@@ -166,7 +166,7 @@ def plot_health_stackplot(annotation_df, legis_df, output_path, plot_start_year=
 
     ax.set_ylim(0, GLOBAL_Y_MAX)
     ax.set_ylabel("Legislative documents", fontsize=13)
-    ax.set_title("Active Health-Relevant Legislative Documents Over Time in Europe", fontsize=13, fontweight="bold", loc="left")
+    ax.set_title("Global Active Health-Relevant Legislative Documents Over Time", fontsize=13, fontweight="bold", loc="left")
 
     step = 5 if len(YEARS) > 20 else 2
     tick_years = YEARS[::step]
