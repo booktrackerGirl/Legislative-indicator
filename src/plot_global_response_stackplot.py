@@ -23,7 +23,7 @@ COLORS = {
 
 DATA_START_YEAR = 1963
 PLOT_START_YEAR = 2000
-PLOT_END_YEAR = 2025  # <- Restriction added
+PLOT_END_YEAR = 2025  
 
 
 # ---------------- PLOTTING FUNCTION ---------------- #
