@@ -1,7 +1,7 @@
 # Overview
 This section describes the role of each script and the corresponding inputs and outputs for them.
 
-## Step 
+## Step 1
 
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/80c2e91e-dd30-4739-a40a-4974d8a56e1c" />
 
@@ -56,7 +56,7 @@ CSV file with one row per document, containing:
 - Health keyword categories
 - Notes (e.g., extraction issues, translation warnings)
 
-## Step
+## Step 2
 ```
 python aggregate_by_family.py -i ./annotation/health_annotations_1.csv -o ./annotation/health_annotations_by_family.csv
 ```
@@ -82,7 +82,7 @@ A **CSV file (`--output` / `-o`)** containing aggregated health annotations at t
 
 
 
-## Step 
+## Step 3
 
 ```
 python merge_iso3.py \
@@ -105,7 +105,7 @@ The script performs a left join on the ISO3 column, appending country informatio
 Optionally saves the merged dataset as a new CSV file if an output path is provided.
 
 
-## Step 
+## Step 4
 
 ```
 python ./src/create_worldmap_2000.py \ --input_csv ./annotation/health_annotations_with_iso3.csv \
@@ -143,7 +143,7 @@ python ./src/create_world_map.py \
 Same as earlier, but the values segregated into two time-periods: before and after Paris Agreement (2015).
 
 
-## Step 
+## Step 5
 
 ```
 python ./src/create_yearly_panel.py \
@@ -163,7 +163,7 @@ The script extracts years from timeline events, determines policy start and end 
 ### Output
 -  `policy_year_panel.csv`: A CSV file containing Document ID and Year, indicating the years each policy is active.
 
-## Step 
+## Step 6
 
 ``` 
 python ./src/plot_global_health_categories.py \
@@ -186,7 +186,7 @@ The script filters for **health-relevant policies**, determines policy **start a
 
 
 
-## Step 
+## Step 7
 
 ```
 python ./src/plot_global_response_stackplot.py \
@@ -208,7 +208,7 @@ The script filters **health-relevant policies**, determines **policy start and e
 - `global_stackplot.pdf` (or PNG): A **stacked area chart** showing the yearly evolution of active health-relevant legislative documents by **policy response type**, including a line for **total active documents**.
 
 
-## Step 
+## Step 8
 
 ```
 python ./src/plot_regional_response_trend.py \
@@ -234,7 +234,7 @@ The script filters for **health-relevant policies**, explodes multiple response 
 
 
 
-## Step 
+## Step 9
 
 ```
 python ./src/plot_regional_health_category_trend.py \
@@ -257,7 +257,7 @@ The script filters for **health-relevant policies**, assigns **health category i
 
 
 
-## Step 
+## Step 10
 
 ```
 python ./src/plot_active_stocks.py \
@@ -284,7 +284,7 @@ This script computes and visualizes the cumulative (“active stock”) number o
 ### Output
 A **PDF figure (`--output`)** showing the time-series trends of active health-relevant legislative documents by the chosen grouping.
 
-## Step 
+## Step 11
 
 ```
 python ./src/aggregate_groups.py \
@@ -310,4 +310,24 @@ The script merges the datasets, filters for health-relevant policies, creates in
 - Countries and specified regional groupings (LC, WHO, HDI)
 - A Global sheet aggregating all countries by year.
 
+## Step 12
+```
+python ./src/plot_proportion.py \
+  --annotation ./annotation/health_annotations_with_iso3.csv \
+  --legis ./data/CCLW_legislative.csv \
+  --output ./outputs/figures/proportion_plot.pdf
+```
+
+### Purpose
+This script generates a multi-panel line plot showing the proportion of health-relevant legislative documents relative to the total number of active documents over time. The figure includes four subplots: Global, LC regions, WHO regions, and HDI categories. Each subplot contains multiple lines representing categories within that grouping, with values expressed as percentages.
+
+### Inputs
+`health_annotations_with_iso3.csv`: Annotation dataset containing Family ID, LC, WHO, HDI classifications, and health relevance indicators.
+`CCLW_legislative.csv`: Legislative dataset containing Family ID and full event timelines (types and dates).
+
+### Processing
+The script expands semicolon-separated event timelines into individual events and extracts years to construct a document lifecycle. Start and end years are identified using predefined event types, and an active document stock is computed over time by adding documents at their start year and removing them at their end year. For each year, the total active documents form the denominator. Health-relevant documents are then aggregated by category (LC, WHO, HDI), and proportions are computed as the share of health-relevant documents in each category relative to the total active documents. The analysis is repeated for each year from 2000 to 2025.
+
+### Outputs
+`health_relevance_proportions.pdf`: A 2×2 multi-panel figure showing trends over time for Global, LC, WHO, and HDI groupings. Each subplot contains multiple colored lines for categories within the grouping, percentage values labeled at 5-year intervals, and a vertical dashed line marking the 2015 Paris Agreement.
 
