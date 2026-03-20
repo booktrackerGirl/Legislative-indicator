@@ -212,6 +212,17 @@ python ./src/aggregate_groups.py \
     --group-cols WHO HDI LC \
     --start-year 2000
 
+# -----------------------------
+# Step 15 — Health relevance proportions by group
+# -----------------------------
+# Plots multi-panel line charts showing the proportion (%) of health-relevant documents
+# among all active documents over time, broken down by Global, LC, WHO, and HDI groups.
+# Each subplot contains multiple lines (one per category), with values labeled every 5 years
+# and a vertical marker for the 2015 Paris Agreement.
+python ./src/plot_proportion.py \
+  --annotation ./annotation/health_annotations_with_iso3.csv \
+  --legis ./data/CCLW_legislative.csv \
+  --output ./outputs/figures/proportion_plot.pdf
 
 echo "========================================"
 echo "Pipeline finished successfully"
