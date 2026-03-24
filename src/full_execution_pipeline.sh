@@ -206,11 +206,11 @@ python ./src/create_regional_health_bars.py \
 # -----------------------------
 # Produces a multi-sheet Excel file summarizing health-relevant policies by WHO, HDI, LC
 python ./src/aggregate_groups.py \
-    --panel ./outputs/dataframes/policy_year_panel.csv \
-    --annotations ./annotation/health_annotations_with_iso3.csv \
-    --output ./outputs/dataframes/aggregated_data_file.xlsx \
-    --group-cols WHO HDI LC \
-    --start-year 2000
+ --cclw ./data/CCLW_legislative.csv \
+ --annotations ./annotation/health_annotations_with_iso3.csv \
+ --output ./outputs/dataframes/aggregated_data_file.xlsx \
+ --group-cols Country WHO HDI LC \
+ --start-year 2000
 
 # -----------------------------
 # Step 15 — Health relevance proportions by group

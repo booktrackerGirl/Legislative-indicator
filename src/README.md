@@ -288,18 +288,18 @@ A **PDF figure (`--output`)** showing the time-series trends of active health-re
 
 ```
 python ./src/aggregate_groups.py \
-  --panel ./outputs/dataframes/policy_year_panel.csv \
-  --annotations ./annotation/health_annotations_with_iso3.csv \
-  --output ./outputs/dataframes/aggregated_data_file.xlsx \
-  --group-cols Country WHO HDI LC \
-  --start-year 2000
+ --cclw ./data/CCLW_legislative.csv \
+ --annotations ./annotation/health_annotations_with_iso3.csv \
+ --output ./outputs/dataframes/aggregated_data_file.xlsx \
+ --group-cols Country WHO HDI LC \
+ --start-year 2000
 ```
 
 ### Purpose
 This script aggregates health-relevant climate policy documents over time, accounting for active policy stocks, and summarizes policy features by country and regional groupings.
 
 ### Inputs
-- ```policy_year_panel.csv```: Panel dataset containing Document ID and Year, indicating when each policy is active.
+- ```CCLW_legislative.csv```: CCLW dataset filtered to only include the legislative documents.
 - ```health_annotations_with_iso3.csv```: Annotated policy metadata including country, response types, health indicators, and grouping variables (e.g., LC, WHO, HDI).
 
 ### Processing
