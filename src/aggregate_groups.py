@@ -48,7 +48,7 @@ RESPONSE_TOPICS = [
 
 
 # -------------------------------
-# Lifecycle (IDENTICAL to stackplot)
+# Lifecycle construction
 # -------------------------------
 def build_policy_years(legis_df):
 
@@ -77,6 +77,7 @@ def build_policy_years(legis_df):
     policy_years.columns = ["start_year", "end_year"]
 
     policy_years = policy_years.dropna(subset=["start_year"])
+
     policy_years["end_year"] = policy_years["end_year"].apply(
         lambda x: min(x, PLOT_END_YEAR) if pd.notnull(x) else x
     )
@@ -85,7 +86,7 @@ def build_policy_years(legis_df):
 
 
 # -------------------------------
-# Active stock (IDENTICAL LOGIC)
+# Active stock simulation
 # -------------------------------
 def simulate_active(df_meta, policy_years, start_year):
 
@@ -108,31 +109,33 @@ def simulate_active(df_meta, policy_years, start_year):
         total_active_set |= new_docs
         total_active_set -= dropped_docs
 
+        # --- active documents ---
         active_df = df_meta[df_meta["Family ID"].isin(active_set)]
-
-        # ✅ CRITICAL: prevent duplicate inflation
         active_df = active_df.drop_duplicates(subset=["Family ID"])
+
+        # --- health-relevant subset (KEY FIX) ---
+        health_df = active_df[active_df["Health relevance (1/0)"] == 1]
 
         rec = {"Year": year}
 
         # --- totals ---
         rec["Total documents"] = len(total_active_set)
 
-        rec["Health-relevant documents"] = active_df[
-            active_df["Health relevance (1/0)"] == 1
-        ]["Family ID"].nunique()
+        rec["Health-relevant documents"] = health_df["Family ID"].nunique()
 
         rec["Institutional health roles"] = active_df[
             active_df["Institutional health role (1/0)"] == 1
         ]["Family ID"].nunique()
 
-        # --- categories ---
+        # --- categories (HEALTH-ONLY) ---
         for cat in HEALTH_CATEGORIES:
-            rec[cat] = active_df[cat].sum()
+            rec[cat] = health_df[cat].sum()
 
-        # --- response topics ---
+        # --- response topics (HEALTH-ONLY) ---
         for topic in RESPONSE_TOPICS:
-            rec[topic] = active_df["Response"].str.contains(topic, case=False, na=False).sum()
+            rec[topic] = health_df["Response"].str.contains(
+                topic, case=False, na=False
+            ).sum()
 
         records.append(rec)
 
@@ -140,14 +143,14 @@ def simulate_active(df_meta, policy_years, start_year):
 
 
 # -------------------------------
-# MAIN
+# Main aggregation
 # -------------------------------
 def aggregate(cclw_csv, annotations_csv, output_excel, grouping_columns, start_year=2000):
 
     legis = pd.read_csv(cclw_csv)
     ann = pd.read_csv(annotations_csv)
 
-    # --- clean ---
+    # --- cleaning ---
     ann["Health keyword categories"] = ann["Health keyword categories"].fillna("")
     ann["Response"] = ann["Response"].fillna("")
     ann["Health relevance (1/0)"] = ann["Health relevance (1/0)"].fillna(0).astype(int)
@@ -155,7 +158,9 @@ def aggregate(cclw_csv, annotations_csv, output_excel, grouping_columns, start_y
 
     # --- category dummies ---
     for cat in HEALTH_CATEGORIES:
-        ann[cat] = ann["Health keyword categories"].str.contains(cat, case=False, regex=False).astype(int)
+        ann[cat] = ann["Health keyword categories"].str.contains(
+            cat, case=False, regex=False
+        ).astype(int)
 
     df = legis.merge(ann, on="Family ID", how="inner")
 
@@ -168,20 +173,24 @@ def aggregate(cclw_csv, annotations_csv, output_excel, grouping_columns, start_y
     df_non_eu = df[~df["Country"].isin(EU_LABELS)]
 
     # -------------------------------
-    # WRITE OUTPUT
+    # Write output
     # -------------------------------
     with pd.ExcelWriter(output_excel, engine="openpyxl") as writer:
 
         # GLOBAL
         global_df = simulate_active(df, policy_years, start_year)
-        global_df.rename(columns=CATEGORY_LABELS).to_excel(writer, sheet_name="Global", index=False)
+        global_df.rename(columns=CATEGORY_LABELS).to_excel(
+            writer, sheet_name="Global", index=False
+        )
 
         # EU
         eu_ids = set(df_eu["Family ID"])
         eu_policy = policy_years[policy_years["Family ID"].isin(eu_ids)]
 
         eu_df = simulate_active(df_eu, eu_policy, start_year)
-        eu_df.rename(columns=CATEGORY_LABELS).to_excel(writer, sheet_name="EU", index=False)
+        eu_df.rename(columns=CATEGORY_LABELS).to_excel(
+            writer, sheet_name="EU", index=False
+        )
 
         # NON-EU GROUPS
         for col in grouping_columns:
@@ -196,7 +205,9 @@ def aggregate(cclw_csv, annotations_csv, output_excel, grouping_columns, start_y
                 subset = df_non_eu[df_non_eu[col] == group_value]
                 ids = set(subset["Family ID"])
 
-                subset_policy = policy_years[policy_years["Family ID"].isin(ids)]
+                subset_policy = policy_years[
+                    policy_years["Family ID"].isin(ids)
+                ]
 
                 out = simulate_active(subset, subset_policy, start_year)
                 out[col] = group_value
@@ -204,9 +215,11 @@ def aggregate(cclw_csv, annotations_csv, output_excel, grouping_columns, start_y
                 records.append(out)
 
             if records:
-                pd.concat(records).to_excel(writer, sheet_name=col[:31], index=False)
+                pd.concat(records).to_excel(
+                    writer, sheet_name=col[:31], index=False
+                )
 
-    print(f"✅ DONE (stackplot-consistent): {output_excel}")
+    print(f"✅ DONE (health-filtered): {output_excel}")
 
 
 # -------------------------------
