@@ -264,10 +264,10 @@ def plot_health_stackplot(annotation_df, legis_df, output_path, plot_start_year=
             )
 
     # Paris Agreement marker
-    if 2015 in YEARS:
-        idx_2015 = YEARS.index(2015)
-        ax.axvline(x=X[idx_2015], linestyle="--", linewidth=1.5, color="black")
-        ax.text(X[idx_2015] + 0.2, 0.9 * GLOBAL_Y_MAX, "Paris Agreement", fontsize=10)
+    if 2016 in YEARS:
+        idx_2016 = YEARS.index(2016)
+        ax.axvline(x=X[idx_2016], linestyle="--", linewidth=1.5, color="black")
+        ax.text(X[idx_2016] + 0.2, 0.9 * GLOBAL_Y_MAX, "Paris Agreement in force (2016)", fontsize=10)
 
     ax.set_ylim(0, GLOBAL_Y_MAX)
     ax.set_ylabel("Legislative documents")
