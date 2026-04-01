@@ -107,7 +107,7 @@ def plot_response_trends(results, years, responses, regions, output_path, group_
                 if rel_change >= REL_THRESHOLD:
                     ax.text(years[k], series[k]+offset, str(int(series[k])), fontsize=6, ha="center")
 
-        ax.axvline(2015, linestyle="--", color="black", linewidth=1.2)
+        ax.axvline(2016, linestyle="--", color="black", linewidth=1.2)
         ax.set_ylim(0, y_max*1.15 if y_max > 0 else 1)
         ax.set_title(f"{resp}", fontsize=12, fontweight="bold", loc="left")
         ax.grid(axis="y", linestyle="--", alpha=0.3)

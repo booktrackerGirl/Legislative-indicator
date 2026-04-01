@@ -189,16 +189,16 @@ def plot_proportions(annotation_df, legis_df, output_path,
         ax.set_xticks(tick_indices)
         ax.set_xticklabels([str(y) for y in tick_years])
 
-        if 2015 in YEARS:
-            idx_2015 = YEARS.index(2015)
-            x_2015 = X[idx_2015]
+        if 2016 in YEARS:
+            idx_2016 = YEARS.index(2016)
+            x_2016 = X[idx_2016]
 
-            ax.axvline(x=x_2015, linestyle="--", linewidth=0.5, color="black")
+            ax.axvline(x=x_2016, linestyle="--", linewidth=0.5, color="black")
 
             ax.text(
-                x_2015 - 0.5,
+                x_2016 - 0.5,
                 ax.get_ylim()[1] * 0.9,
-                "Paris Agreement",
+                "Paris Agreement in force (2016)",
                 #rotation=90,
                 va="top",
                 fontsize=8

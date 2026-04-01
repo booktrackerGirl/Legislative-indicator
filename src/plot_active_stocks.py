@@ -113,9 +113,9 @@ def plot_region_trends(plot_df, output_path, group_col="LC"):
                     alpha=0.9
                 )
 
-    plt.axvline(x=2015, linestyle="--", color="black", linewidth=1.8)
+    plt.axvline(x=2016, linestyle="--", color="black", linewidth=1.8)
     plt.ylim(0, y_max * 1.15)
-    plt.text(2015 + 0.2, y_max * 1.05, "Paris Agreement", fontsize=10)
+    plt.text(2016 + 0.2, y_max * 1.05, "Paris Agreement in force (2016)", fontsize=10)
 
     plt.title(f"Active Health-Relevant Legislative Documents by {group_col} (Timeline Stock)", fontsize=14, fontweight="bold", loc="left")
     plt.xlabel("Year")

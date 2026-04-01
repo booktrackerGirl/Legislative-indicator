@@ -28,8 +28,15 @@ PLOT_END_YEAR = 2025
 
 # ---------------- PLOTTING FUNCTION ---------------- #
 
-def plot_global_stackplot(annotation_df, legis_df, output_path,
-                          plot_start_year=PLOT_START_YEAR, plot_end_year=PLOT_END_YEAR):
+def plot_global_stackplot(annotation_df, legis_df, ax=None,
+                          plot_start_year=PLOT_START_YEAR,
+                          plot_end_year=PLOT_END_YEAR):
+
+    # Create axis if standalone
+    created_fig = False
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(12, 6))
+        created_fig = True
 
     # ---------------- FILTER HEALTH-RELEVANT ---------------- #
     annotation_health = annotation_df[annotation_df["Health relevance (1/0)"] >= 1].copy()
@@ -82,7 +89,7 @@ def plot_global_stackplot(annotation_df, legis_df, output_path,
         lambda x: min(x, plot_end_year) if pd.notnull(x) else x
     )
 
-    # ---------------- STOCK LOGIC (HEALTH-RELEVANT) ---------------- #
+    # ---------------- STOCK LOGIC ---------------- #
     YEARS = list(range(plot_start_year, plot_end_year + 1))
 
     active_set = set()
@@ -93,8 +100,8 @@ def plot_global_stackplot(annotation_df, legis_df, output_path,
         new_docs = set(policy_years.loc[policy_years["start_year"] == year, "Family ID"])
         dropped_docs = set(policy_years.loc[policy_years["end_year"] == year, "Family ID"])
 
-        active_set = active_set.union(new_docs)
-        active_set = active_set.difference(dropped_docs)
+        active_set |= new_docs
+        active_set -= dropped_docs
 
         active_totals.append(len(active_set))
 
@@ -102,14 +109,8 @@ def plot_global_stackplot(annotation_df, legis_df, output_path,
         for col in RESPONSE_COLS:
             category_totals[col].append(active_df[col].sum())
 
-    # ---------------- STOCK LOGIC (ALL DOCUMENTS) ---------------- #
-    annotation_all = annotation_df.copy()
-    legis_df_all = legis_df.copy()
-
-    df_all = legis_df_all[
-        ["Family ID", "Full timeline of events (types)", "Full timeline of events (dates)"]
-    ].copy()
-
+    # ---------------- ALL DOCS ---------------- #
+    df_all = legis_df.copy()
     df_all["event_types"] = df_all["Full timeline of events (types)"].str.split(";")
     df_all["event_dates"] = df_all["Full timeline of events (dates)"].str.split(";")
 
@@ -126,8 +127,7 @@ def plot_global_stackplot(annotation_df, legis_df, output_path,
 
     policy_years_all = pd.concat([start_years_all, end_years_all], axis=1)
     policy_years_all.columns = ["start_year", "end_year"]
-    policy_years_all = policy_years_all.dropna(subset=["start_year"])
-    policy_years_all = policy_years_all.reset_index()
+    policy_years_all = policy_years_all.dropna(subset=["start_year"]).reset_index()
 
     policy_years_all["end_year"] = policy_years_all["end_year"].apply(
         lambda x: min(x, plot_end_year) if pd.notnull(x) else x
@@ -140,12 +140,12 @@ def plot_global_stackplot(annotation_df, legis_df, output_path,
         new_docs_all = set(policy_years_all.loc[policy_years_all["start_year"] == year, "Family ID"])
         dropped_docs_all = set(policy_years_all.loc[policy_years_all["end_year"] == year, "Family ID"])
 
-        total_active_set = total_active_set.union(new_docs_all)
-        total_active_set = total_active_set.difference(dropped_docs_all)
+        total_active_set |= new_docs_all
+        total_active_set -= dropped_docs_all
 
         total_active_totals.append(len(total_active_set))
 
-    # ---------------- BUILD DATAFRAME ---------------- #
+    # ---------------- BUILD DATA ---------------- #
     gdata = pd.DataFrame({"Year": YEARS})
     for col in RESPONSE_COLS:
         gdata[col] = category_totals[col]
@@ -153,135 +153,58 @@ def plot_global_stackplot(annotation_df, legis_df, output_path,
     gdata["Total health-relevant"] = active_totals
     gdata["Total all documents"] = total_active_totals
 
-    for col in RESPONSE_COLS + ["Total health-relevant", "Total all documents"]:
-        gdata[col] = gdata[col].astype(int)
-
     # ---------------- PLOT ---------------- #
     X = np.arange(len(YEARS))
     gdata["StackSum"] = gdata[RESPONSE_COLS].sum(axis=1)
+
     GLOBAL_Y_MAX = max(
         gdata["StackSum"].max(),
         gdata["Total all documents"].max()
     ) * 1.15
 
-    fig, ax = plt.subplots(figsize=(12, 6))
-
     # Stackplot
-    stack_arrays = [gdata[col].values for col in RESPONSE_COLS]
     ax.stackplot(
         X,
-        stack_arrays,
+        [gdata[col].values for col in RESPONSE_COLS],
         colors=[COLORS[c] for c in RESPONSE_COLS],
         alpha=0.5,
         edgecolor="black",
         linewidth=0.3
     )
 
-    # ---------------- HEALTH-RELEVANT TOTAL ---------------- #
-    line_health, = ax.plot(
-        X,
-        gdata["Total health-relevant"],
-        color="black",
-        marker="o",
-        linewidth=2.5,
-        label="Health-relevant documents"
-    )
+    ax.plot(X, gdata["Total health-relevant"], color="black", marker="o", linewidth=2.5)
+    ax.plot(X, gdata["Total all documents"], color="black", linestyle="--", linewidth=2.5)
 
-    for xi, val in zip(X, gdata["Total health-relevant"]):
-        if val > 0:
-            ax.text(
-                xi,
-                val + 0.015 * GLOBAL_Y_MAX,
-                str(int(val)),
-                ha="center",
-                fontsize=8
-            )
-
-    # ---------------- ALL DOCUMENTS TOTAL ---------------- #
-    line_all, = ax.plot(
-        X,
-        gdata["Total all documents"],
-        color="black",
-        linestyle="--",
-        linewidth=2.5,
-        label="Total documents (all)"
-    )
-
-    label_step = 5
-
-    for i, (xi, val) in enumerate(zip(X, gdata["Total all documents"])):
-        if i % label_step == 0 and val > 0:
-
-            ax.scatter(
-                xi,
-                val,
-                color="black",
-                marker="D",
-                s=35,
-                zorder=3
-            )
-
-            ax.text(
-                xi,
-                val + 0.02 * GLOBAL_Y_MAX,
-                str(int(val)),
-                ha="center",
-                fontsize=8,
-                fontweight="bold"
-            )
-
-    # ---------------- PARIS AGREEMENT LINE ---------------- #
+    # Paris Agreement
     if 2016 in YEARS:
-        idx_2016 = YEARS.index(2016)
-        ax.axvline(x=X[idx_2016], linestyle="--", linewidth=1.8, color="black")
-        ax.text(X[idx_2016] + 0.2, 0.9 * GLOBAL_Y_MAX, "Paris Agreement in force (2016)", va="top", fontsize=10)
+        idx = YEARS.index(2016)
+        ax.axvline(x=idx, linestyle="--", linewidth=1.5, color="black")
 
-    # ---------------- AXES ---------------- #
+    # Axes
+    ax.set_xlim(0, len(YEARS) - 1)
     ax.set_ylim(0, GLOBAL_Y_MAX)
-    ax.set_ylabel("Legislative responses", fontsize=13)
-    ax.set_title(
-        "Global Active Climate-Health Legislative Documents Over Time",
-        fontsize=13,
-        fontweight="bold",
-        loc="left"
-    )
+    ax.set_title("Global Active Climate-Health Legislative Documents Over Time", loc="left")
+    ax.set_ylabel("Legislative responses")
 
-    step = 5 if len(YEARS) > 20 else 2
-    tick_years = YEARS[::step]
-    tick_indices = [YEARS.index(y) for y in tick_years]
-    ax.set_xticks(tick_indices)
-    ax.set_xticklabels([str(int(y)) for y in tick_years])
+    ticks = list(range(0, len(YEARS), 5))
+    ax.set_xticks(ticks)
+    ax.set_xticklabels([str(YEARS[i]) for i in ticks])
 
     ax.grid(axis="y", linestyle="--", alpha=0.4)
 
-    # ---------------- LEGEND ---------------- #
-    bar_handles = [plt.Rectangle((0, 0), 1, 1, color=COLORS[c], alpha=0.5) for c in RESPONSE_COLS]
+    # Save if standalone
+    if created_fig:
+        plt.tight_layout()
+        fig.savefig(args.output, format="pdf")
+        plt.close(fig)
 
-    fig.legend(
-        handles=bar_handles + [line_health, line_all],
-        labels=RESPONSE_COLS + ["Health-relevant documents", "Total documents (all)"],
-        loc="upper left",
-        bbox_to_anchor=(0.1, 0.88),
-        frameon=True
-    )
-
-    fig.text(
-        0.01,
-        0.01,
-        f"Note: Data available since {DATA_START_YEAR}; analysis shown from {plot_start_year} to {plot_end_year}.",
-        fontsize=11,
-        style="italic"
-    )
-
-    plt.tight_layout(rect=[0.03, 0.04, 0.97, 0.95])
-    plt.savefig(output_path, format="pdf", dpi=300)
-    plt.close()
+    return GLOBAL_Y_MAX
 
 
 # ---------------- MAIN ---------------- #
 
 def main():
-    parser = argparse.ArgumentParser(description="Global stacked area plot using timeline-based stock logic")
+    parser = argparse.ArgumentParser(description="Global stacked plot")
     parser.add_argument("--annotation", required=True)
     parser.add_argument("--legis", required=True)
     parser.add_argument("--output", required=True)
@@ -290,7 +213,7 @@ def main():
     annotation_df = pd.read_csv(args.annotation)
     legis_df = pd.read_csv(args.legis)
 
-    plot_global_stackplot(annotation_df, legis_df, args.output)
+    plot_global_stackplot(annotation_df, legis_df)
 
 
 if __name__ == "__main__":

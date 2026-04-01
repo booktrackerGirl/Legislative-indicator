@@ -191,7 +191,7 @@ def plot_health_trends(results, years, categories, regions, output_path, group_c
                         ha="center"
                     )
 
-        ax.axvline(2015, linestyle="--", color="black", linewidth=1.2)
+        ax.axvline(2016, linestyle="--", color="black", linewidth=1.2)
         ax.set_ylim(0, y_max * 1.15 if y_max > 0 else 1)
 
         label = CATEGORY_LABELS.get(cat, cat)
