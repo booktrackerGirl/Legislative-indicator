@@ -58,7 +58,7 @@ CSV file with one row per document, containing:
 
 ## Step 2
 ```
-python aggregate_by_family.py -i ./annotation/health_annotations_1.csv -o ./annotation/health_annotations_by_family.csv
+python ./src/aggregate_by_family.py -i ./annotation/health_annotations_1.csv -o ./annotation/health_annotations_by_family.csv
 ```
 ### Purpose
 This script aggregates **document-level health annotations** to the **Family ID level**, consolidating multiple document entries belonging to the same policy family into a single record.
@@ -85,7 +85,7 @@ A **CSV file (`--output` / `-o`)** containing aggregated health annotations at t
 ## Step 3
 
 ```
-python merge_iso3.py \
+python ./src/merge_iso3.py \
   --main_csv ./annotation/health_annotations.csv \
   --lookup_csv ./annotation/iso3_lookup.csv \
   --output ./annotation/health_annotations_with_iso3.csv
