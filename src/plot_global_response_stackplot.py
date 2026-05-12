@@ -28,7 +28,7 @@ PLOT_END_YEAR = 2025
 
 # ---------------- PLOTTING FUNCTION ---------------- #
 
-def plot_global_stackplot(annotation_df, legis_df, ax=None,
+def plot_global_stackplot(annotation_df, legis_df, output_path=None, ax=None,
                           plot_start_year=PLOT_START_YEAR,
                           plot_end_year=PLOT_END_YEAR):
 
@@ -169,33 +169,96 @@ def plot_global_stackplot(annotation_df, legis_df, ax=None,
         colors=[COLORS[c] for c in RESPONSE_COLS],
         alpha=0.5,
         edgecolor="black",
-        linewidth=0.3
+        linewidth=0.3,
+        labels=RESPONSE_COLS 
     )
 
-    ax.plot(X, gdata["Total health-relevant"], color="black", marker="o", linewidth=2.5)
-    ax.plot(X, gdata["Total all documents"], color="black", linestyle="--", linewidth=2.5)
+    ax.plot(X, gdata["Total health-relevant"], color="black", marker="o", linewidth=2.5, label="Total health-relevant")
+    ax.plot(X, gdata["Total all documents"], color="black", linestyle="--", linewidth=2.5, label="Total all documents")
+
+    # Diamond markers only at 5-year ticks
+    total_label_years = list(range(2000, 2026, 5))
+
+    tick_idx = [YEARS.index(y) for y in total_label_years if y in YEARS]
+
+    ax.plot(
+        X[tick_idx],
+        gdata["Total all documents"].iloc[tick_idx],
+        linestyle="None",
+        marker="D",
+        markersize=6,
+        color="black"
+    )
 
     # Paris Agreement
     if 2016 in YEARS:
         idx = YEARS.index(2016)
         ax.axvline(x=idx, linestyle="--", linewidth=1.5, color="black")
+        ax.text(X[idx] + 0.2, 0.9 * GLOBAL_Y_MAX, "Paris Agreement in force (2016)", fontsize=10)
+
+    # ---------------- LABEL TOTAL LINES ---------------- #
+
+    # Health-relevant labels every 2 years
+    health_label_years = list(range(2000, 2026, 2))
+    
+    if 2025 not in health_label_years:
+        health_label_years.append(2025)
+
+    for year in health_label_years:
+        if year in YEARS:
+            idx = YEARS.index(year)
+
+            val = gdata.loc[idx, "Total health-relevant"]
+
+            ax.text(
+                X[idx],
+                val + GLOBAL_Y_MAX * 0.012,
+                str(val),
+                fontsize=8,
+                ha="center",
+                va="bottom",
+                color="black"
+            )
+
+    # Total documents labels every 5 years
+    total_label_years = list(range(2000, 2026, 5))
+
+    for year in total_label_years:
+        if year in YEARS:
+            idx = YEARS.index(year)
+
+            val = gdata.loc[idx, "Total all documents"]
+
+            ax.text(
+                X[idx],
+                val + GLOBAL_Y_MAX * 0.012,
+                str(val),
+                fontsize=8,
+                ha="center",
+                va="bottom",
+                color="black"
+            )
 
     # Axes
-    ax.set_xlim(0, len(YEARS) - 1)
+    ax.set_xlim(0, len(YEARS))
     ax.set_ylim(0, GLOBAL_Y_MAX)
     ax.set_title("Global Active Climate-Health Legislative Documents Over Time", loc="left")
-    ax.set_ylabel("Legislative responses")
+    ax.set_ylabel("Legislative documents")
 
-    ticks = list(range(0, len(YEARS), 5))
-    ax.set_xticks(ticks)
-    ax.set_xticklabels([str(YEARS[i]) for i in ticks])
+    step = 5
+    tick_indices = np.arange(0, len(YEARS), step)
+    tick_labels = [str(YEARS[i]) for i in tick_indices]
+
+    ax.set_xticks(tick_indices)
+    ax.set_xticklabels(tick_labels)
 
     ax.grid(axis="y", linestyle="--", alpha=0.4)
+    ax.legend(loc="upper left", fontsize=10)
 
     # Save if standalone
-    if created_fig:
+    if created_fig and output_path is not None:
         plt.tight_layout()
-        fig.savefig(args.output, format="pdf")
+        fig.savefig(output_path, format="pdf")
         plt.close(fig)
 
     return GLOBAL_Y_MAX
@@ -213,7 +276,7 @@ def main():
     annotation_df = pd.read_csv(args.annotation)
     legis_df = pd.read_csv(args.legis)
 
-    plot_global_stackplot(annotation_df, legis_df)
+    plot_global_stackplot(annotation_df, legis_df, output_path=args.output)
 
 
 if __name__ == "__main__":
